@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <EditText
         android:id="@+id/editTextDatePlace"
         android:layout_width="190dp"
@@ -31,6 +32,7 @@
         android:text="@string/saint_petersburg"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextDatePlace" />
+
 
     <Button
         android:id="@+id/buttonToday"
@@ -76,6 +78,7 @@
         app:layout_constraintStart_toEndOf="@+id/editTextNumberTemperature"
         app:layout_constraintTop_toBottomOf="@+id/textViewPlace" />
 
+
     <TextView
         android:id="@+id/textViewCloudy"
         android:layout_width="wrap_content"
@@ -117,6 +120,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewPlace"
         app:srcCompat="@drawable/cloudy" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

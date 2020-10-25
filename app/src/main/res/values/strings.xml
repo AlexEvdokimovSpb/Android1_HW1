@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">My homework</string>
+    <string name="app_name" >Weather</string>
+    <string name="saint_petersburg">Saint-Petersburg</string>
+    <string name="buttonToday">Today</string>
+    <string name="buttonTomorrow">Tomorrow</string>
+    <string name="buttonFiveDays">5 days</string>
+    <string name="temperature" translatable="false"> &#8451; </string>
+    <string name="cloudy">Cloudy</string>
+    <string name="feels">"Feels like: "</string>
 </resources>

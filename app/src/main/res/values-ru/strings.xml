@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" >Погода</string>
+    <string name="saint_petersburg">Санкт-Петербург</string>
+    <string name="buttonToday">Сегодня</string>
+    <string name="buttonTomorrow">Завтра</string>
+    <string name="buttonFiveDays">5 дней</string>
+    <string name="cloudy">Облачно</string>
+    <string name="feels">Ощущается как:</string>
+
+
+</resources>
