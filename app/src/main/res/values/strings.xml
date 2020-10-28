@@ -4,7 +4,23 @@
     <string name="buttonToday">Today</string>
     <string name="buttonTomorrow">Tomorrow</string>
     <string name="buttonFiveDays">5 days</string>
-    <string name="temperature" translatable="false"> &#8451; </string>
+    <string name="celsius" translatable="false"> &#8451; </string>
+    <string name="fahrenheit" translatable="false"> &#8457; </string>
+    <string name="temperature"> temperature </string>
     <string name="cloudy">Cloudy</string>
     <string name="feels">"Feels like: "</string>
+    <string name="select_location">Select or enter a location</string>
+    <string name="moscow">Moscow</string>
+    <string name="london">London</string>
+    <string name="paris">Paris</string>
+    <string name="rom">Rom</string>
+    <string name="edit_location">Enter your location</string>
+    <string name="select_place">Select place</string>
+    <string name="setting">setting</string>
+    <string name="dark">dark</string>
+    <string name="light">light</string>
+    <string name="theme">theme</string>
+    <string name="wind_speed">wind_speed</string>
+    <string name="ms">m/s</string>
+    <string name="kn">kn</string>
 </resources>
