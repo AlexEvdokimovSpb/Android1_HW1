@@ -1,26 +1,50 @@
 <resources>
     <string name="app_name" >Weather</string>
-    <string name="saint_petersburg">Saint-Petersburg</string>
+
+    <!-- for button -->
     <string name="buttonToday">Today</string>
     <string name="buttonTomorrow">Tomorrow</string>
     <string name="buttonFiveDays">5 days</string>
-    <string name="celsius" translatable="false"> &#8451; </string>
-    <string name="fahrenheit" translatable="false"> &#8457; </string>
-    <string name="temperature"> temperature </string>
+
+    <!-- for types of sky -->
     <string name="cloudy">Cloudy</string>
-    <string name="feels">"Feels like: "</string>
+
+    <!-- for location and name city -->
     <string name="select_location">Select or enter a location</string>
+    <string name="edit_location">Enter your location</string>
+    <string name="select_place">Select place</string>
+
+    <string name="saint_petersburg">Saint-Petersburg</string>
     <string name="moscow">Moscow</string>
     <string name="london">London</string>
     <string name="paris">Paris</string>
     <string name="rom">Rom</string>
-    <string name="edit_location">Enter your location</string>
-    <string name="select_place">Select place</string>
+
+    <!-- for name setting -->
+    <string name="theme">theme</string>
     <string name="setting">setting</string>
     <string name="dark">dark</string>
     <string name="light">light</string>
-    <string name="theme">theme</string>
+
+
     <string name="wind_speed">wind_speed</string>
     <string name="ms">m/s</string>
     <string name="kn">kn</string>
+
+    <string name="temperature"> temperature </string>
+    <string name="celsius" translatable="false"> &#8451; </string>
+    <string name="fahrenheit" translatable="false"> &#8457; </string>
+    <string name="feels">"Feels like: "</string>
+
+    <!-- for toast -->
+    <string name="toast_button_setting">The settings button is clicked</string>
+    <string name="toast_button_place">The place selection button is pressed</string>
+    <string name="toast_start">main activity start</string>
+    <string name="toast_restoreInstanceState">restoreInstanceState</string>
+    <string name="toast_resume">activity resume</string>
+    <string name="toast_pause">activity pause</string>
+    <string name="toast_restart">activity restart</string>
+    <string name="toast_stop">activity stop</string>
+    <string name="toast_destroy">activity destroy</string>
+    <string name="toast_create">create started</string>
 </resources>

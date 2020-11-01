@@ -1,27 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" >Погода</string>
-    <string name="saint_petersburg">Санкт-Петербург</string>
+
+    <!-- for button -->
     <string name="buttonToday">Сегодня</string>
     <string name="buttonTomorrow">Завтра</string>
     <string name="buttonFiveDays">5 дней</string>
+
+    <!-- for types of sky -->
     <string name="cloudy">Облачно</string>
-    <string name="feels">Ощущается как:</string>
-    <string name="select_location">Выберите или введите место</string>
+
+    <!-- for location and name city -->
+    <string name="saint_petersburg">Санкт-Петербург</string>
     <string name="moscow">Москва</string>
     <string name="london">Лондон</string>
     <string name="paris">Париж</string>
     <string name="rom">Рим</string>
+    <string name="select_location">Выберите или введите место</string>
     <string name="edit_location">Введите ваше место</string>
     <string name="select_place">Выберите место</string>
+
+    <!-- for name setting -->
     <string name="setting">настройки</string>
-    <string name="temperature">температура</string>
+
+    <string name="feels">Ощущается как:</string>
+
+    <string name="theme">тема</string>
     <string name="dark">темная</string>
     <string name="light">светлая</string>
-    <string name="theme">тема</string>
+
+    <string name="temperature">температура</string>
     <string name="wind_speed">скорость ветра</string>
     <string name="ms">м/с</string>
     <string name="kn">узлов</string>
 
-
+    <!-- for toast -->
+    <string name="toast_button_setting">Нажата кнопка настроек</string>
+    <string name="toast_button_place">Нажата кнопка выбора места</string>
+    <string name="toast_start">старт</string>
+    <string name="toast_restoreInstanceState">"восстановление интерфейса "</string>
+    <string name="toast_resume">работа активити</string>
+    <string name="toast_pause">пауза активити</string>
+    <string name="toast_restart">рестарт активити</string>
+    <string name="toast_stop">остановка активити</string>
+    <string name="toast_destroy">удаление активити</string>
+    <string name="toast_create">создание активити</string>
 </resources>
