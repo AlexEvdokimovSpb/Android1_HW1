@@ -47,4 +47,5 @@
     <string name="toast_stop">activity stop</string>
     <string name="toast_destroy">activity destroy</string>
     <string name="toast_create">create started</string>
+    <string name="toast_saveInstanceState">SaveInstanceState</string>
 </resources>

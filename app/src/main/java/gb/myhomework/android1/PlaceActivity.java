@@ -2,23 +2,22 @@ package gb.myhomework.android1;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class Place extends Activity implements View.OnClickListener {
+public class PlaceActivity extends Activity implements View.OnClickListener {
 
     public static final boolean isDebug = true;
-    public static final String TAG = "HWLogger";
+    public static final String TAG = "HW "+ PlaceActivity.class.getSimpleName();
     final MainPresenter presenter = MainPresenter.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.place);
+        setContentView(R.layout.activity_place);
 
 
         Button button = (Button) findViewById(R.id.button);
@@ -44,35 +43,35 @@ public class Place extends Activity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.button:
                 presenter.setPlace(R.string.saint_petersburg);
-                Toast.makeText(Place.this, R.string.saint_petersburg, Toast.LENGTH_SHORT).show();
+                Toast.makeText(PlaceActivity.this, R.string.saint_petersburg, Toast.LENGTH_SHORT).show();
                 if (isDebug) {
                     Log.i(TAG, "selected saint_petersburg");
                 }
                 break;
             case R.id.button2:
                 presenter.setPlace(R.string.moscow);
-                Toast.makeText(Place.this, R.string.moscow, Toast.LENGTH_SHORT).show();
+                Toast.makeText(PlaceActivity.this, R.string.moscow, Toast.LENGTH_SHORT).show();
                 if (isDebug) {
                     Log.i(TAG, "selected moscow");
                 }
                 break;
             case R.id.button3:
                 presenter.setPlace(R.string.london);
-                Toast.makeText(Place.this, R.string.london, Toast.LENGTH_SHORT).show();
+                Toast.makeText(PlaceActivity.this, R.string.london, Toast.LENGTH_SHORT).show();
                 if (isDebug) {
                     Log.i(TAG, "selected london");
                 }
                 break;
             case R.id.button4:
                 presenter.setPlace(R.string.paris);
-                Toast.makeText(Place.this, R.string.paris, Toast.LENGTH_SHORT).show();
+                Toast.makeText(PlaceActivity.this, R.string.paris, Toast.LENGTH_SHORT).show();
                 if (isDebug) {
                     Log.i(TAG, "selected paris");
                 }
                 break;
             case R.id.button5:
                 presenter.setPlace(R.string.rom);
-                Toast.makeText(Place.this, R.string.rom, Toast.LENGTH_SHORT).show();
+                Toast.makeText(PlaceActivity.this, R.string.rom, Toast.LENGTH_SHORT).show();
                 if (isDebug) {
                     Log.i(TAG, "selected rom");
                 }

@@ -45,4 +45,5 @@
     <string name="toast_stop">остановка активити</string>
     <string name="toast_destroy">удаление активити</string>
     <string name="toast_create">создание активити</string>
+    <string name="toast_saveInstanceState">"сохранение состояния "</string>
 </resources>
