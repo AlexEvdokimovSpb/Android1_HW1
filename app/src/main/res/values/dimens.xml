@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="height30">30dp</dimen>
+    <dimen name="height45">45dp</dimen>
+    <dimen name="height55">55dp</dimen>
+    <dimen name="height60">60dp</dimen>
+    <dimen name="height155">155dp</dimen>
+
+    <dimen name="width60">60dp</dimen>
+    <dimen name="width120">120dp</dimen>
+    <dimen name="width190">190dp</dimen>
+    <dimen name="widthL">383dp</dimen>
+
+    <dimen name="dimens16">16dp</dimen>
+    <dimen name="dimens60">60dp</dimen>
+    <dimen name="dimens150">150dp</dimen>
+
+    <dimen name="margin1">1dp</dimen>
+    <dimen name="margin5">5dp</dimen>
+    <dimen name="margin12">12dp</dimen>
+    <dimen name="margin30">30dp</dimen>
+    <dimen name="margin60">60dp</dimen>
+    <dimen name="margin190">190dp</dimen>
+
+</resources>

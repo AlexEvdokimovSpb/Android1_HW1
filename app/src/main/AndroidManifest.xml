@@ -16,6 +16,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".Place"
+            android:label="@string/select_place">
+        </activity>
+
+        <activity android:name=".Setting"
+            android:label="@string/setting">
+        </activity>
+
+
+
     </application>
 
 </manifest>

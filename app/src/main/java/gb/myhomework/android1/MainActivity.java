@@ -2,9 +2,10 @@ package gb.myhomework.android1;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
-
+import android.view.View;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,12 +18,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Текущее время
         Date currentDate = new Date();
-        // Форматирование времени как "день.месяц"
         DateFormat dateFormat = new SimpleDateFormat("dd.MM", Locale.getDefault());
         String dateText = dateFormat.format(currentDate);
-        // Форматирование времени как "часы:минуты"
         DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
         String timeText = timeFormat.format(currentDate);
 
@@ -31,11 +29,15 @@ public class MainActivity extends AppCompatActivity {
         editTextDatePlace.setText(dateText);
         editTextTimePlace.setText(timeText);
 
-
     }
 
+    public void button_select_place(View view) {
+        Intent intent = new Intent(MainActivity.this, Place.class);
+        startActivity(intent);
+    }
 
-
-
-
+    public void button_setting(View view) {
+        Intent intent = new Intent(MainActivity.this, Setting.class);
+        startActivity(intent);
+    }
 }

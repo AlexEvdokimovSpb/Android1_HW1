@@ -9,30 +9,29 @@
 
     <EditText
         android:id="@+id/editTextDatePlace"
-        android:layout_width="190dp"
-        android:layout_height="45dp"
+        android:layout_width="@dimen/width190"
+        android:layout_height="@dimen/height45"
         android:inputType="date"
         app:layout_constraintStart_toEndOf="@+id/editTextTimePlace"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="16dp" />
+        tools:layout_editor_absoluteY="@dimen/dimens16" />
 
     <EditText
         android:id="@+id/editTextTimePlace"
-        android:layout_width="190dp"
-        android:layout_height="45dp"
+        android:layout_width="@dimen/width190"
+        android:layout_height="@dimen/height45"
         android:inputType="time"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="16dp" />
+        tools:layout_editor_absoluteY="@dimen/dimens16" />
 
     <TextView
         android:id="@+id/textViewPlace"
-        android:layout_width="383dp"
-        android:layout_height="55dp"
+        android:layout_width="174dp"
+        android:layout_height="46dp"
         android:text="@string/saint_petersburg"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextDatePlace" />
-
 
     <Button
         android:id="@+id/buttonToday"
@@ -60,24 +59,22 @@
 
     <EditText
         android:id="@+id/editTextNumberTemperature"
-        android:layout_width="121dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="5dp"
-        android:ems="10"
+        android:layout_width="@dimen/width120"
+        android:layout_height="@dimen/height60"
+        android:layout_marginTop="@dimen/margin5"
         android:inputType="number"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewPlace" />
 
     <TextView
         android:id="@+id/textViewTemperature"
-        android:layout_width="59dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="12dp"
-        android:text="@string/temperature"
+        android:layout_width="@dimen/width60"
+        android:layout_height="@dimen/height60"
+        android:layout_marginStart="@dimen/margin1"
+        android:layout_marginTop="@dimen/margin12"
+        android:text="@string/celsius"
         app:layout_constraintStart_toEndOf="@+id/editTextNumberTemperature"
         app:layout_constraintTop_toBottomOf="@+id/textViewPlace" />
-
 
     <TextView
         android:id="@+id/textViewCloudy"
@@ -97,28 +94,46 @@
 
     <EditText
         android:id="@+id/editTextNumberFeelsTemperature"
-        android:layout_width="121dp"
-        android:layout_height="30dp"
-        android:ems="10"
+        android:layout_width="@dimen/width120"
+        android:layout_height="@dimen/height30"
         android:inputType="number"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewFeels" />
 
     <TextView
         android:id="@+id/textViewFeelsTemperature"
-        android:layout_width="59dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="@dimen/width60"
+        android:layout_height="@dimen/height30"
+        android:layout_marginStart="@dimen/margin5"
         android:text="@string/temperature"
         app:layout_constraintBaseline_toBaselineOf="@+id/editTextNumberFeelsTemperature"
         app:layout_constraintStart_toEndOf="@+id/editTextNumberFeelsTemperature" />
 
     <ImageView
         android:id="@+id/imageViewCloudy"
-        android:layout_width="178dp"
-        android:layout_height="155dp"
+        android:layout_width="@dimen/width190"
+        android:layout_height="@dimen/height155"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewPlace"
         app:srcCompat="@drawable/cloudy" />
+
+    <Button
+        android:id="@+id/button_select_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="button_select_place"
+        android:text="@string/select_place"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textViewPlace"
+        app:layout_constraintStart_toEndOf="@+id/textViewPlace" />
+
+    <Button
+        android:id="@+id/setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin30"
+        android:onClick="button_setting"
+        android:text="@string/setting"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNumberFeelsTemperature" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

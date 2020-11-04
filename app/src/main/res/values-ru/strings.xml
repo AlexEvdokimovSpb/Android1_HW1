@@ -7,6 +7,21 @@
     <string name="buttonFiveDays">5 дней</string>
     <string name="cloudy">Облачно</string>
     <string name="feels">Ощущается как:</string>
+    <string name="select_location">Выберите или введите место</string>
+    <string name="moscow">Москва</string>
+    <string name="london">Лондон</string>
+    <string name="paris">Париж</string>
+    <string name="rom">Рим</string>
+    <string name="edit_location">Введите ваше место</string>
+    <string name="select_place">Выберите место</string>
+    <string name="setting">настройки</string>
+    <string name="temperature">температура</string>
+    <string name="dark">темная</string>
+    <string name="light">светлая</string>
+    <string name="theme">тема</string>
+    <string name="wind_speed">скорость ветра</string>
+    <string name="ms">м/с</string>
+    <string name="kn">узлов</string>
 
 
 </resources>
