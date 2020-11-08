@@ -19,18 +19,19 @@ public class PlaceActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place);
 
-
         Button button = (Button) findViewById(R.id.button);
         Button button2 = (Button) findViewById(R.id.button2);
         Button button3 = (Button) findViewById(R.id.button3);
         Button button4 = (Button) findViewById(R.id.button4);
         Button button5 = (Button) findViewById(R.id.button5);
+        Button button6 = (Button) findViewById(R.id.button6);
 
         button.setOnClickListener(this);
         button2.setOnClickListener(this);
         button3.setOnClickListener(this);
         button4.setOnClickListener(this);
         button5.setOnClickListener(this);
+        button6.setOnClickListener(this);
 
         if (isDebug) {
             Log.d(TAG, "place activity create ");
@@ -74,6 +75,11 @@ public class PlaceActivity extends Activity implements View.OnClickListener {
                 Toast.makeText(PlaceActivity.this, R.string.rom, Toast.LENGTH_SHORT).show();
                 if (isDebug) {
                     Log.i(TAG, "selected rom");
+                }
+                break;
+            case R.id.button6:
+                if (isDebug) {
+                    Log.i(TAG, "confirm entry");
                 }
                 break;
         }

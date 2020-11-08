@@ -5,7 +5,9 @@
     <string name="buttonToday">Today</string>
     <string name="buttonTomorrow">Tomorrow</string>
     <string name="buttonFiveDays">5 days</string>
-
+    <string name="button_more_details">in details</string>
+    <string name="button_confirm">confirm</string>
+    <string name="confirm_entry">confirm entry</string>
     <!-- for types of sky -->
     <string name="cloudy">Cloudy</string>
 
@@ -48,4 +50,8 @@
     <string name="toast_destroy">activity destroy</string>
     <string name="toast_create">create started</string>
     <string name="toast_saveInstanceState">SaveInstanceState</string>
+    <string name="toast_button_detail">button detail</string>
+    <string name="toast_confirm" >confirm</string>
+
+
 </resources>

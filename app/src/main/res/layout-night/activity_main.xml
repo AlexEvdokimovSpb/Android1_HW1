@@ -130,10 +130,20 @@
         android:id="@+id/setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin30"
+        android:layout_marginStart="@dimen/margin5"
         android:onClick="button_setting"
         android:text="@string/setting"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonFiveDays" />
+
+    <Button
+        android:id="@+id/details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="button_detail"
+        android:text="@string/button_more_details"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextNumberFeelsTemperature" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

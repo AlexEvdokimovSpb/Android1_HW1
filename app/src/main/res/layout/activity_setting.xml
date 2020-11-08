@@ -21,10 +21,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin60"
         android:text="@string/theme"
+        android:showText="true"
         android:textOff="@string/dark"
         android:textOn="@string/light"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSetting" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewSetting"
+         />
 
     <Switch
         android:id="@+id/switch_temperature"
@@ -33,10 +35,12 @@
         android:layout_marginStart="@dimen/margin60"
         android:layout_marginTop="@dimen/margin12"
         android:text="@string/temperature"
+        android:showText="true"
         android:textOff="@string/celsius"
         android:textOn="@string/fahrenheit"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch_theme" />
+        app:layout_constraintTop_toBottomOf="@+id/switch_theme"
+         />
 
     <Switch
         android:id="@+id/switch_wind_speed"
@@ -45,10 +49,21 @@
         android:layout_marginStart="@dimen/margin60"
         android:layout_marginTop="@dimen/margin12"
         android:text="@string/wind_speed"
+        android:showText="true"
         android:textOff="@string/ms"
         android:textOn="@string/kn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch_temperature" />
+        app:layout_constraintTop_toBottomOf="@+id/switch_temperature"
+         />
+
+    <Button
+        android:id="@+id/button_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_confirm"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
