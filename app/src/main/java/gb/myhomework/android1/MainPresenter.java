@@ -12,13 +12,13 @@ public final class MainPresenter {
     public static final String TAG = "HW "+ MainPresenter.class.getSimpleName();
 
     private MainPresenter(){
-        place = R.string.saint_petersburg;
+        place = 2131689576; // Париж по умолчанию
     }
 
     public synchronized void setPlace(int place) {
         this.place = place;
-        if (isDebug) {
-            Log.d(TAG, "Place = "+ place);
+        if (Constants.DEBUG) {
+            Log.v(TAG, "Place = "+ place);
         }
 
     }
@@ -31,8 +31,8 @@ public final class MainPresenter {
         synchronized (syncObj) {
             if (instance == null) {
                 instance = new MainPresenter();
-                if (isDebug) {
-                    Log.d(TAG, "instance = new MainPresenter");
+                if (Constants.DEBUG) {
+                    Log.v(TAG, "instance = new MainPresenter");
                 }
 
             }
