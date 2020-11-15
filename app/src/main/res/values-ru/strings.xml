@@ -46,4 +46,9 @@
     <string name="toast_destroy">удаление активити</string>
     <string name="toast_create">создание активити</string>
     <string name="toast_saveInstanceState">"сохранение состояния "</string>
+    <string name="button_more_details">подробно</string>
+    <string name="toast_button_detail">кнопка подробности</string>
+    <string name="button_confirm">подтвердить</string>
+    <string name="toast_confirm">настройки подтверждены</string>
+    <string name="confirm_entry">подтвердить ввод</string>
 </resources>
