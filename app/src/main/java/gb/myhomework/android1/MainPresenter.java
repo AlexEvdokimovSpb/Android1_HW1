@@ -12,7 +12,7 @@ public final class MainPresenter {
     public static final String TAG = "HW "+ MainPresenter.class.getSimpleName();
 
     private MainPresenter(){
-        place = 2131689576; // Париж по умолчанию
+        place = 0;
     }
 
     public synchronized void setPlace(int place) {
@@ -20,7 +20,6 @@ public final class MainPresenter {
         if (Constants.DEBUG) {
             Log.v(TAG, "Place = "+ place);
         }
-
     }
 
     public synchronized int getPlace(){
@@ -34,10 +33,8 @@ public final class MainPresenter {
                 if (Constants.DEBUG) {
                     Log.v(TAG, "instance = new MainPresenter");
                 }
-
             }
             return instance;
         }
     }
-
 }

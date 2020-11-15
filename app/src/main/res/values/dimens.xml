@@ -22,4 +22,6 @@
     <dimen name="margin60">60dp</dimen>
     <dimen name="margin190">190dp</dimen>
 
+    <dimen name="size_text">45sp</dimen>
+
 </resources>

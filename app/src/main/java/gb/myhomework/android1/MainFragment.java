@@ -52,7 +52,6 @@ public class MainFragment extends Fragment implements Constants{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         place  = (TextView) view.findViewById(R.id.textViewPlace);
-        place.setText(presenter.getPlace());
         unitsTemperature = (TextView) view.findViewById(R.id.textViewTemperature);
         unitsTemperature.setText(R.string.celsius);
 
@@ -152,9 +151,11 @@ public class MainFragment extends Fragment implements Constants{
     @Override
     public void onResume() {
         super.onResume();
-        place.setText(presenter.getPlace());
+        String[] data = getResources().getStringArray(R.array.descriptions);
+        int position=presenter.getPlace();
+        place.setText(data[position]);
         if (Constants.DEBUG) {
-            Log.v(TAG, "main fragment resume");
+            Log.v(TAG, "main fragment resume " + position);
         }
     }
 

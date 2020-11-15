@@ -1,12 +1,23 @@
 <resources>
-    <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+
+    <string-array name="descriptions">
+        <item>@string/athens</item>
+        <item>@string/barcelona</item>
+        <item>@string/london</item>
+        <item>@string/moscow</item>
+        <item>@string/paris</item>
+        <item>@string/rom</item>
+        <item>@string/saint_petersburg</item>
     </string-array>
 
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
-    </string-array>
+    <array name="pictures">
+        <item>@drawable/athens</item>
+        <item>@drawable/barcelona</item>
+        <item>@drawable/london</item>
+        <item>@drawable/moscow</item>
+        <item>@drawable/paris</item>
+        <item>@drawable/rom</item>
+        <item>@drawable/saint_petersburg</item>
+    </array>
+
 </resources>

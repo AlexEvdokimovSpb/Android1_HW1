@@ -1,16 +1,16 @@
 package gb.myhomework.android1;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
-public class PlaceActivity extends Activity implements View.OnClickListener {
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-    public static final boolean isDebug = true;
+public class PlaceActivity extends AppCompatActivity implements Constants {
+
     public static final String TAG = "HW "+ PlaceActivity.class.getSimpleName();
     final MainPresenter presenter = MainPresenter.getInstance();
 
@@ -19,69 +19,36 @@ public class PlaceActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place);
 
-        Button button = (Button) findViewById(R.id.button);
-        Button button2 = (Button) findViewById(R.id.button2);
-        Button button3 = (Button) findViewById(R.id.button3);
-        Button button4 = (Button) findViewById(R.id.button4);
-        Button button5 = (Button) findViewById(R.id.button5);
-        Button button6 = (Button) findViewById(R.id.button6);
-
-        button.setOnClickListener(this);
-        button2.setOnClickListener(this);
-        button3.setOnClickListener(this);
-        button4.setOnClickListener(this);
-        button5.setOnClickListener(this);
-        button6.setOnClickListener(this);
+        String[] data = getResources().getStringArray(R.array.descriptions);
+        initRecyclerView(data);
 
         if (Constants.DEBUG) {
-            Log.d(TAG, "place activity create ");
+            Log.v(TAG, "place activity create ");
         }
     }
 
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button:
-                presenter.setPlace(R.string.saint_petersburg);
-                Toast.makeText(PlaceActivity.this, R.string.saint_petersburg, Toast.LENGTH_SHORT).show();
+    private PlaceAdapter initRecyclerView(String[] data){
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        PlaceAdapter adapter = new PlaceAdapter(data);
+        recyclerView.setAdapter(adapter);
+
+        adapter.SetOnItemClickListener(new PlaceAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                presenter.setPlace(position);
+                Toast.makeText(PlaceActivity.this, String.format("Позиция - %d", position), Toast.LENGTH_SHORT).show();
                 if (Constants.DEBUG) {
-                    Log.v(TAG, "selected saint_petersburg");
+                    Log.v(TAG, "selected city: "+position);
                 }
-                break;
-            case R.id.button2:
-                presenter.setPlace(R.string.moscow);
-                Toast.makeText(PlaceActivity.this, R.string.moscow, Toast.LENGTH_SHORT).show();
-                if (Constants.DEBUG) {
-                    Log.v(TAG, "selected moscow");
-                }
-                break;
-            case R.id.button3:
-                presenter.setPlace(R.string.london);
-                Toast.makeText(PlaceActivity.this, R.string.london, Toast.LENGTH_SHORT).show();
-                if (Constants.DEBUG) {
-                    Log.v(TAG, "selected london");
-                }
-                break;
-            case R.id.button4:
-                presenter.setPlace(R.string.paris);
-                Toast.makeText(PlaceActivity.this, R.string.paris, Toast.LENGTH_SHORT).show();
-                if (Constants.DEBUG) {
-                    Log.v(TAG, "selected paris");
-                }
-                break;
-            case R.id.button5:
-                presenter.setPlace(R.string.rom);
-                Toast.makeText(PlaceActivity.this, R.string.rom, Toast.LENGTH_SHORT).show();
-                if (Constants.DEBUG) {
-                    Log.v(TAG, "selected rom");
-                }
-                break;
-            case R.id.button6:
-                if (Constants.DEBUG) {
-                    Log.v(TAG, "confirm entry");
-                }
-                break;
+            }
+        });
+
+        if (Constants.DEBUG) {
+            Log.v(TAG, "initRecyclerView");
         }
+        return adapter;
     }
 }
