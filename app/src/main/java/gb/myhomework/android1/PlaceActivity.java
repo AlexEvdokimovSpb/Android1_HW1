@@ -33,7 +33,7 @@ public class PlaceActivity extends Activity implements View.OnClickListener {
         button5.setOnClickListener(this);
         button6.setOnClickListener(this);
 
-        if (isDebug) {
+        if (Constants.DEBUG) {
             Log.d(TAG, "place activity create ");
         }
     }
@@ -45,41 +45,41 @@ public class PlaceActivity extends Activity implements View.OnClickListener {
             case R.id.button:
                 presenter.setPlace(R.string.saint_petersburg);
                 Toast.makeText(PlaceActivity.this, R.string.saint_petersburg, Toast.LENGTH_SHORT).show();
-                if (isDebug) {
-                    Log.i(TAG, "selected saint_petersburg");
+                if (Constants.DEBUG) {
+                    Log.v(TAG, "selected saint_petersburg");
                 }
                 break;
             case R.id.button2:
                 presenter.setPlace(R.string.moscow);
                 Toast.makeText(PlaceActivity.this, R.string.moscow, Toast.LENGTH_SHORT).show();
-                if (isDebug) {
-                    Log.i(TAG, "selected moscow");
+                if (Constants.DEBUG) {
+                    Log.v(TAG, "selected moscow");
                 }
                 break;
             case R.id.button3:
                 presenter.setPlace(R.string.london);
                 Toast.makeText(PlaceActivity.this, R.string.london, Toast.LENGTH_SHORT).show();
-                if (isDebug) {
-                    Log.i(TAG, "selected london");
+                if (Constants.DEBUG) {
+                    Log.v(TAG, "selected london");
                 }
                 break;
             case R.id.button4:
                 presenter.setPlace(R.string.paris);
                 Toast.makeText(PlaceActivity.this, R.string.paris, Toast.LENGTH_SHORT).show();
-                if (isDebug) {
-                    Log.i(TAG, "selected paris");
+                if (Constants.DEBUG) {
+                    Log.v(TAG, "selected paris");
                 }
                 break;
             case R.id.button5:
                 presenter.setPlace(R.string.rom);
                 Toast.makeText(PlaceActivity.this, R.string.rom, Toast.LENGTH_SHORT).show();
-                if (isDebug) {
-                    Log.i(TAG, "selected rom");
+                if (Constants.DEBUG) {
+                    Log.v(TAG, "selected rom");
                 }
                 break;
             case R.id.button6:
-                if (isDebug) {
-                    Log.i(TAG, "confirm entry");
+                if (Constants.DEBUG) {
+                    Log.v(TAG, "confirm entry");
                 }
                 break;
         }
