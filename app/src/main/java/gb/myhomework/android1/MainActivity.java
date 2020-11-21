@@ -3,7 +3,7 @@ package gb.myhomework.android1;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
+import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity implements Constants{
     public static final String TAG = "HW "+ MainActivity.class.getSimpleName();
@@ -14,7 +14,8 @@ public class MainActivity extends AppCompatActivity implements Constants{
         setContentView(R.layout.activity_main);
 
         if (Constants.DEBUG) {
-            Toast.makeText(MainActivity.this, R.string.toast_create, Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content),
+                    R.string.toast_create, Snackbar.LENGTH_LONG).show();
             Log.v(TAG, "main activity create");
         }
     }

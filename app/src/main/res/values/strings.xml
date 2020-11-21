@@ -69,5 +69,10 @@
     </string>
     <string name="attachment_summary_off" translatable="false">Only download attachments when manually requested</string>
 
+    <!-- Hint -->
+    <string name="degrees">degrees</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+
 
 </resources>

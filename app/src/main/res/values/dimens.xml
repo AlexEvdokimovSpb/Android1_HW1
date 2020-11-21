@@ -23,5 +23,6 @@
     <dimen name="margin190">190dp</dimen>
 
     <dimen name="size_text">45sp</dimen>
+    <dimen name="size_place">20sp</dimen>
 
 </resources>

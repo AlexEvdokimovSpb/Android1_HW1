@@ -3,6 +3,7 @@ package gb.myhomework.android1;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class PlaceActivity extends AppCompatActivity implements Constants {
 
     public static final String TAG = "HW "+ PlaceActivity.class.getSimpleName();
-    final MainPresenter presenter = MainPresenter.getInstance();
+    private final MainPresenter presenter = MainPresenter.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
