@@ -9,40 +9,39 @@ import androidx.annotation.RequiresApi;
 public class MyParcel implements Parcelable {
 
     private boolean theme;
-    private boolean temperature;
-    private boolean windSpeed;
+    private boolean formatMetric;
+    private boolean languageRu;
 
-    public MyParcel(boolean theme, boolean temperature, boolean windSpeed) {
+    public MyParcel(boolean theme, boolean formatMetric, boolean languageRu) {
         this.theme = theme;
-        this.temperature = temperature;
-        this.windSpeed = windSpeed;
+        this.formatMetric = formatMetric;
+        this.languageRu = languageRu;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     protected MyParcel(Parcel in) {
         theme = in.readBoolean();
-        temperature = in.readBoolean();
-        windSpeed = in.readBoolean();
+        formatMetric = in.readBoolean();
+        languageRu = in.readBoolean();
     }
 
     public boolean isTheme() {
         return theme;
     }
-    public boolean isTemperature() {
-        return temperature;
+    public boolean isFormatMetric() {
+        return formatMetric;
     }
-    public boolean isWindSpeed() {
-        return windSpeed;
+    public boolean isLanguageRu() {
+        return languageRu;
     }
-
-    public void setTemperature(boolean temperature) {
-        this.temperature = temperature;
+    public void setFormatMetric(boolean formatMetric) {
+        this.formatMetric = formatMetric;
     }
     public void setTheme(boolean theme) {
         this.theme = theme;
     }
-    public void setWindSpeed(boolean windSpeed) {
-        this.windSpeed = windSpeed;
+    public void setLanguageRu(boolean languageRu) {
+        this.languageRu = languageRu;
     }
 
     public static final Creator<MyParcel> CREATOR = new Creator<MyParcel>() {
@@ -66,7 +65,7 @@ public class MyParcel implements Parcelable {
     @Override
     public void writeToParcel(android.os.Parcel dest, int flags) {
         dest.writeByte((byte) (theme ? 1 : 0));
-        dest.writeByte((byte) (temperature ? 1 : 0));
-        dest.writeByte((byte) (windSpeed ? 1 : 0));
+        dest.writeByte((byte) (formatMetric ? 1 : 0));
+        dest.writeByte((byte) (languageRu ? 1 : 0));
     }
 }

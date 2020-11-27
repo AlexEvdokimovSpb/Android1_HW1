@@ -81,9 +81,10 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewPlace">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/degrees" />
+        android:id="@+id/editTextNumberTemperature2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/degrees" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -121,6 +122,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewFeels">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextNumberFeelsTemperature2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/degrees" />
@@ -141,7 +143,7 @@
         android:layout_height="@dimen/height155"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewPlace"
-        app:srcCompat="@drawable/cloudy" />
+        app:srcCompat="@drawable/load" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_select_place"

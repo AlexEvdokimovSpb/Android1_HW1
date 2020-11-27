@@ -16,7 +16,7 @@
     <string name="edit_location">Enter your location</string>
     <string name="select_place">Select place</string>
 
-    <string name="saint_petersburg">Saint-Petersburg</string>
+    <string name="saint_petersburg">Saint Petersburg</string>
     <string name="moscow">Moscow</string>
     <string name="london">London</string>
     <string name="paris">Paris</string>
@@ -25,11 +25,12 @@
     <string name="barcelona">Barcelona</string>
 
     <!-- for name setting -->
-    <string name="theme">theme</string>
+    <string name="theme">Theme</string>
     <string name="setting">setting</string>
     <string name="dark">dark</string>
     <string name="light">light</string>
-
+    <string name="russian">Russian</string>
+    <string name="metric_system">Metric system</string>
 
     <string name="wind_speed">wind_speed</string>
     <string name="ms">m/s</string>
@@ -39,6 +40,7 @@
     <string name="celsius" translatable="false"> &#8451; </string>
     <string name="fahrenheit" translatable="false"> &#8457; </string>
     <string name="feels">"Feels like: "</string>
+
 
     <!-- for toast -->
     <string name="toast_button_setting">The settings button is clicked</string>
@@ -73,6 +75,7 @@
     <string name="degrees">degrees</string>
     <string name="date">Date</string>
     <string name="time">Time</string>
+
 
 
 </resources>

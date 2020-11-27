@@ -1,5 +1,6 @@
 package gb.myhomework.android1;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -25,20 +27,42 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainFragment extends Fragment implements Constants{
+import gb.myhomework.android1.model.Weather;
+import gb.myhomework.android1.model.WeatherRequest;
+
+public class MainFragment extends Fragment implements Constants, ConnectionForData.WeatherCallback,
+        Observer  {
 
     public static final String TAG = "HW "+ MainFragment.class.getSimpleName();
     private final MainPresenter presenter = MainPresenter.getInstance();
-    private final static int REQUEST_CODE = 2;
+    private final static int ID = 0;
 
     private TextView place;
     private TextView unitsTemperature;
+    private TextView weatherDescription;
+    private TextInputEditText numberTemperature;
+    private TextInputEditText numberFeelsTemperature;
+    private ImageView weatherIcon;
 
     private MyParcel currentMyParcel;
-    private boolean theme = true;
-    private boolean temperature = false;
-    private boolean windSpeed = false;
-    private boolean isExistSetting;
+    private boolean theme = false;
+    private boolean languageRu = true;
+    private boolean formatMetric = true;
+    boolean isExistSetting;
+    private WeatherRequest weatherRequest;
+    private ConnectionForData connectionForData = new ConnectionForData(this);
+    private ConnectionForIcon connectionForIcon = new ConnectionForIcon();
+    private Publisher publisher;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        publisher = ((PublisherGetter) context).getPublisher();
+        if (Constants.DEBUG) {
+            Log.v(TAG, " context " + context);
+            Log.v(TAG, " publisher " + publisher);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,7 +77,18 @@ public class MainFragment extends Fragment implements Constants{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         place  = (TextView) view.findViewById(R.id.textViewPlace);
         unitsTemperature = (TextView) view.findViewById(R.id.textViewTemperature);
-        unitsTemperature.setText(R.string.celsius);
+        weatherDescription = (TextView) view.findViewById(R.id.textViewCloudy);
+        numberTemperature = (TextInputEditText) view.findViewById(R.id.editTextNumberTemperature2);
+        numberFeelsTemperature = (TextInputEditText)
+                view.findViewById(R.id.editTextNumberFeelsTemperature2);
+        weatherIcon = (ImageView) view.findViewById(R.id.imageViewCloudy);
+
+        setTemperatureSymbol(formatMetric);
+
+        String[] data = getResources().getStringArray(R.array.descriptions);
+        int position=presenter.getPlace();
+
+        connectionForData.connection(data[position], languageRu, formatMetric);
 
         Date  currentDate = new Date();
         DateFormat dateFormat = new SimpleDateFormat("dd.MM", Locale.getDefault());
@@ -61,8 +96,10 @@ public class MainFragment extends Fragment implements Constants{
         DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
         String timeText = timeFormat.format(currentDate);
 
-        TextInputEditText editTextDatePlace = (TextInputEditText) view.findViewById(R.id.editTextDatePlace2);
-        TextInputEditText editTextTimePlace = (TextInputEditText) view.findViewById(R.id.editTextTimePlace2);
+        TextInputEditText editTextDatePlace = (TextInputEditText)
+                view.findViewById(R.id.editTextDatePlace2);
+        TextInputEditText editTextTimePlace = (TextInputEditText)
+                view.findViewById(R.id.editTextTimePlace2);
         editTextDatePlace.setText(dateText);
         editTextTimePlace.setText(timeText);
 
@@ -94,6 +131,39 @@ public class MainFragment extends Fragment implements Constants{
             }
         });
 
+        Button buttonToday = (Button) view.findViewById(R.id.buttonToday);
+        buttonToday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (weatherRequest != null) {
+                    Weather weather[] = weatherRequest.getWeather();
+                    String foWeatherDescription = weather[ID].getDescription();
+                    String weatherIconUrl = weather[ID].getIcon();
+                    String foPlace = weatherRequest.getName();
+                    String foNumberTemperature = Float.toString(weatherRequest.getMain().getTemp());
+                    String foNumberFeelsTemperature = Float.toString(weatherRequest.getMain()
+                            .getFeels_like());
+
+                    weatherDescription.setText(foWeatherDescription);
+                    place.setText(foPlace);
+                    numberTemperature.setText(foNumberTemperature);
+                    numberFeelsTemperature.setText(foNumberFeelsTemperature);
+                    connectionForIcon.fetchImage(weatherIconUrl, weatherIcon);
+
+                    if (Constants.DEBUG) {
+                        Log.v(TAG, "TEST " + foNumberTemperature);
+                    }
+                } else {
+                    if (Constants.DEBUG) {
+                        Log.v(TAG, "weatherRequest = null");
+                    }
+                }
+                if (Constants.DEBUG) {
+                    Log.v(TAG, "buttonToday");
+                }
+            }
+        });
+
         isExistSetting = getResources().getConfiguration().orientation
                 != Configuration.ORIENTATION_LANDSCAPE;
         if(isExistSetting) {
@@ -102,15 +172,17 @@ public class MainFragment extends Fragment implements Constants{
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), SettingActivity.class);
-                    MyParcel currentMyParcel = new MyParcel(theme, temperature, windSpeed);
+                    currentMyParcel = new MyParcel(theme, languageRu, formatMetric);
                     intent.putExtra("SETTING", currentMyParcel);
-                    //startActivityForResult(intent, REQUEST_CODE);
+                    intent.putExtra("PUBLISHER", publisher);
                     startActivity(intent);
                     if (Constants.DEBUG) {
                         Snackbar.make(v, R.string.toast_button_setting, Snackbar.LENGTH_LONG).show();
                         Log.v(TAG, "select setting");
+                        Log.v(TAG, "send publisher " + publisher);
+                        Log.v(TAG, "send currentMyParcel " + currentMyParcel);
                         Log.v(TAG, "in setting activity send: "+ currentMyParcel.isTheme()+" "+
-                                currentMyParcel.isTemperature()+" "+currentMyParcel.isWindSpeed() );
+                                currentMyParcel.isFormatMetric()+" "+currentMyParcel.isLanguageRu() );
                     }
                 }
             });
@@ -132,13 +204,8 @@ public class MainFragment extends Fragment implements Constants{
 
         if (savedInstanceState != null) {
             currentMyParcel = (MyParcel) savedInstanceState.getParcelable("SETTING");
-            temperature = currentMyParcel.isTemperature();
-            if(temperature){
-                unitsTemperature.setText(R.string.fahrenheit);
-            }
-            else {
-                unitsTemperature.setText(R.string.celsius);
-            }
+            languageRu = currentMyParcel.isFormatMetric();
+            setTemperatureSymbol(formatMetric);
 
             if (Constants.DEBUG) {
                 Snackbar.make(getActivity().findViewById(android.R.id.content),
@@ -146,7 +213,7 @@ public class MainFragment extends Fragment implements Constants{
                 Log.v(TAG, "main fragment restoreInstanceState");
             }
         } else {
-            currentMyParcel = new MyParcel(theme,temperature,windSpeed);
+            currentMyParcel = new MyParcel(theme, languageRu, formatMetric);
         }
 
         if (isExistSetting) {
@@ -175,7 +242,21 @@ public class MainFragment extends Fragment implements Constants{
         super.onResume();
         String[] data = getResources().getStringArray(R.array.descriptions);
         int position=presenter.getPlace();
+        connectionForData.connection(data[position], languageRu, formatMetric);
         place.setText(data[position]);
+        setTemperatureSymbol(formatMetric);
+
+        if (weatherRequest != null) {
+            float temp = weatherRequest.getMain().getTemp();
+            if (Constants.DEBUG) {
+                Log.v(TAG, "temp TEST " + temp);
+            }
+        } else {
+            if (Constants.DEBUG) {
+                Log.v(TAG, "weatherRequest = null");
+            }
+        }
+
         if (Constants.DEBUG) {
             Snackbar.make(getActivity().findViewById(android.R.id.content),
                     R.string.toast_resume, Snackbar.LENGTH_SHORT).show();
@@ -231,8 +312,35 @@ public class MainFragment extends Fragment implements Constants{
             ft.commit();
             if (Constants.DEBUG) {
                 Log.v(TAG, "setting fragment commit with "+ currentMyParcel.isTheme()+" "+
-                        currentMyParcel.isTemperature()+" "+currentMyParcel.isWindSpeed() );
+                        currentMyParcel.isFormatMetric()+" "+currentMyParcel.isLanguageRu() );
             }
+        }
+    }
+
+    @Override
+    public void callBackReturn(WeatherRequest weatherRequest) {
+        this.weatherRequest = weatherRequest;
+    }
+
+    @Override
+    public void updateMyParcel(MyParcel myParcel) {
+        currentMyParcel = myParcel;
+        theme = currentMyParcel.isTheme();
+        languageRu = currentMyParcel.isLanguageRu();
+        formatMetric = currentMyParcel.isFormatMetric();
+
+        if (Constants.DEBUG) {
+            Log.v(TAG, "updateMyParcel " +theme+ " "+ formatMetric + " "+ languageRu);
+        }
+        onResume();
+    }
+
+    private void setTemperatureSymbol(boolean formatMetric){
+        if(formatMetric){
+            unitsTemperature.setText(R.string.celsius);
+        }
+        else {
+            unitsTemperature.setText(R.string.fahrenheit);
         }
     }
 }

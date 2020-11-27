@@ -11,9 +11,9 @@
         android:id="@+id/textViewSetting"
         android:layout_width="@dimen/height155"
         android:layout_height="@dimen/height30"
-        android:layout_marginStart="@dimen/margin190"
         android:layout_marginTop="@dimen/margin5"
         android:text="@string/setting"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,7 +38,7 @@
         android:layout_marginStart="@dimen/margin60"
         android:layout_marginEnd="@dimen/margin60"
         android:layout_marginTop="@dimen/margin12"
-        android:text="@string/temperature"
+        android:text="@string/metric_system"
         android:showText="true"
         android:textOff="@string/celsius"
         android:textOn="@string/fahrenheit"
@@ -53,7 +53,7 @@
         android:layout_marginStart="@dimen/margin60"
         android:layout_marginEnd="@dimen/margin60"
         android:layout_marginTop="@dimen/margin12"
-        android:text="@string/wind_speed"
+        android:text="@string/russian"
         android:showText="true"
         android:textOff="@string/ms"
         android:textOn="@string/kn"

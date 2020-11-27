@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:orientation="horizontal"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:background="@color/teal_200">-->
+
+<!--    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--        android:layout_width="match_parent" android:layout_height="match_parent">-->
+<!--        <fragment android:name="gb.myhomework.android1.MainFragment"-->
+<!--            android:id="@+id/main"-->
+<!--            android:layout_width="match_parent" android:layout_height="match_parent" />-->
+<!--    </FrameLayout>-->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_activity"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/teal_200">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent" android:layout_height="match_parent">
-        <fragment android:name="gb.myhomework.android1.MainFragment"
-            android:id="@+id/main"
-            android:layout_width="match_parent" android:layout_height="match_parent" />
-    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-</LinearLayout>
+</FrameLayout>

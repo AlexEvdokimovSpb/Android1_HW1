@@ -27,7 +27,7 @@
 
     <string name="feels">Ощущается как:</string>
 
-    <string name="theme">тема</string>
+    <string name="theme">Tема</string>
     <string name="dark">темная</string>
     <string name="light">светлая</string>
 
@@ -35,6 +35,8 @@
     <string name="wind_speed">скорость ветра</string>
     <string name="ms">м/с</string>
     <string name="kn">узлов</string>
+    <string name="russian">Русский язык</string>
+    <string name="metric_system">Метрическая система</string>
 
     <!-- for toast -->
     <string name="toast_button_setting">Нажата кнопка настроек</string>
@@ -58,5 +60,6 @@
     <string name="degrees">градусы</string>
     <string name="date">Дата</string>
     <string name="time">Время</string>
+
 
 </resources>
