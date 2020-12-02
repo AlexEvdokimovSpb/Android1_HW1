@@ -3,7 +3,6 @@ package gb.myhomework.android1;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,7 +35,7 @@ public class PlaceActivity extends AppCompatActivity implements Constants {
         PlaceAdapter adapter = new PlaceAdapter(data);
         recyclerView.setAdapter(adapter);
 
-        adapter.SetOnItemClickListener(new PlaceAdapter.OnItemClickListener() {
+        adapter.setOnItemClickListener(new PlaceAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 presenter.setPlace(position);
