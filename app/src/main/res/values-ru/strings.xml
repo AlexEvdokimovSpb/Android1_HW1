@@ -31,7 +31,7 @@
     <string name="dark">темная</string>
     <string name="light">светлая</string>
 
-    <string name="temperature">температура</string>
+    <string name="temperature">температура  </string>
     <string name="wind_speed">скорость ветра</string>
     <string name="ms">м/с</string>
     <string name="kn">узлов</string>
@@ -53,5 +53,10 @@
     <string name="button_confirm">подтвердить</string>
     <string name="toast_confirm">настройки подтверждены</string>
     <string name="confirm_entry">подтвердить ввод</string>
+
+    <!-- Hint -->
+    <string name="degrees">градусы</string>
+    <string name="date">Дата</string>
+    <string name="time">Время</string>
 
 </resources>

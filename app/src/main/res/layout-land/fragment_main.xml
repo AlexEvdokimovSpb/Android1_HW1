@@ -152,19 +152,12 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextDatePlace" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/setting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/setting"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/buttonFiveDays" />
-
-    <com.google.android.material.button.MaterialButton
         android:id="@+id/details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button_more_details"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberFeelsTemperature" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonFiveDays" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

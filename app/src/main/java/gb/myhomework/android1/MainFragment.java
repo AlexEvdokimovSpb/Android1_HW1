@@ -15,28 +15,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-
 public class MainFragment extends Fragment implements Constants{
 
     public static final String TAG = "HW "+ MainFragment.class.getSimpleName();
-    final MainPresenter presenter = MainPresenter.getInstance();
+    private final MainPresenter presenter = MainPresenter.getInstance();
     private final static int REQUEST_CODE = 2;
 
     private TextView place;
     private TextView unitsTemperature;
 
-    private boolean theme = false;
+    private MyParcel currentMyParcel;
+    private boolean theme = true;
     private boolean temperature = false;
     private boolean windSpeed = false;
-
     private boolean isExistSetting;
 
     @Override
@@ -50,19 +51,18 @@ public class MainFragment extends Fragment implements Constants{
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
         place  = (TextView) view.findViewById(R.id.textViewPlace);
         unitsTemperature = (TextView) view.findViewById(R.id.textViewTemperature);
         unitsTemperature.setText(R.string.celsius);
 
-        Date currentDate = new Date();
+        Date  currentDate = new Date();
         DateFormat dateFormat = new SimpleDateFormat("dd.MM", Locale.getDefault());
         String dateText = dateFormat.format(currentDate);
         DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
         String timeText = timeFormat.format(currentDate);
 
-        EditText editTextDatePlace = (EditText) view.findViewById(R.id.editTextDatePlace);
-        EditText editTextTimePlace = (EditText) view.findViewById(R.id.editTextTimePlace);
+        TextInputEditText editTextDatePlace = (TextInputEditText) view.findViewById(R.id.editTextDatePlace2);
+        TextInputEditText editTextTimePlace = (TextInputEditText) view.findViewById(R.id.editTextTimePlace2);
         editTextDatePlace.setText(dateText);
         editTextTimePlace.setText(timeText);
 
@@ -75,6 +75,7 @@ public class MainFragment extends Fragment implements Constants{
                 Intent browser = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(browser);
                 if (Constants.DEBUG) {
+                    Snackbar.make(v, R.string.toast_button_detail, Snackbar.LENGTH_SHORT).show();
                     Log.v(TAG, "go for getails" + url);
                 }
             }
@@ -87,25 +88,38 @@ public class MainFragment extends Fragment implements Constants{
                 Intent intent = new Intent(getActivity(), PlaceActivity.class );
                 startActivity(intent);
             if (Constants.DEBUG) {
+                Snackbar.make(v, R.string.toast_button_place, Snackbar.LENGTH_LONG).show();
                 Log.v(TAG, "select place");
             }
             }
         });
 
-        Button button_setting = (Button) view.findViewById(R.id.setting);
-        button_setting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), SettingActivity.class);
-                startActivityForResult(intent, REQUEST_CODE);
-            if (Constants.DEBUG) {
-                Log.v(TAG, "select setting");
-            }
-            }
-        });
+        isExistSetting = getResources().getConfiguration().orientation
+                != Configuration.ORIENTATION_LANDSCAPE;
+        if(isExistSetting) {
+            Button button_setting = (Button) view.findViewById(R.id.setting);
+            button_setting.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), SettingActivity.class);
+                    MyParcel currentMyParcel = new MyParcel(theme, temperature, windSpeed);
+                    intent.putExtra("SETTING", currentMyParcel);
+                    //startActivityForResult(intent, REQUEST_CODE);
+                    startActivity(intent);
+                    if (Constants.DEBUG) {
+                        Snackbar.make(v, R.string.toast_button_setting, Snackbar.LENGTH_LONG).show();
+                        Log.v(TAG, "select setting");
+                        Log.v(TAG, "in setting activity send: "+ currentMyParcel.isTheme()+" "+
+                                currentMyParcel.isTemperature()+" "+currentMyParcel.isWindSpeed() );
+                    }
+                }
+            });
+        }
 
         super.onViewCreated(view, savedInstanceState);
         if (Constants.DEBUG) {
+            Snackbar.make(getActivity().findViewById(android.R.id.content), R.string.toast_create,
+                    Snackbar.LENGTH_SHORT).show();
             Log.v(TAG, "main fragment onViewCreated");
         }
     }
@@ -113,12 +127,12 @@ public class MainFragment extends Fragment implements Constants{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         isExistSetting = getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE;
 
         if (savedInstanceState != null) {
-            temperature = savedInstanceState.getBoolean("unitsTemperature");
+            currentMyParcel = (MyParcel) savedInstanceState.getParcelable("SETTING");
+            temperature = currentMyParcel.isTemperature();
             if(temperature){
                 unitsTemperature.setText(R.string.fahrenheit);
             }
@@ -127,15 +141,21 @@ public class MainFragment extends Fragment implements Constants{
             }
 
             if (Constants.DEBUG) {
+                Snackbar.make(getActivity().findViewById(android.R.id.content),
+                        R.string.toast_restoreInstanceState, Snackbar.LENGTH_SHORT).show();
                 Log.v(TAG, "main fragment restoreInstanceState");
             }
+        } else {
+            currentMyParcel = new MyParcel(theme,temperature,windSpeed);
         }
 
         if (isExistSetting) {
-            showSetting();
+            showSetting(currentMyParcel);
         }
 
         if (Constants.DEBUG) {
+            Snackbar.make(getActivity().findViewById(android.R.id.content), R.string.toast_restart,
+                    Snackbar.LENGTH_SHORT).show();
             Log.v(TAG, "main fragment onActivityCreated");
         }
     }
@@ -144,6 +164,8 @@ public class MainFragment extends Fragment implements Constants{
     public void onStart(){
         super.onStart();
         if (Constants.DEBUG) {
+            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                    R.string.toast_start, Snackbar.LENGTH_SHORT).show();
             Log.v(TAG, "main fragment start");
         }
     }
@@ -155,6 +177,8 @@ public class MainFragment extends Fragment implements Constants{
         int position=presenter.getPlace();
         place.setText(data[position]);
         if (Constants.DEBUG) {
+            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                    R.string.toast_resume, Snackbar.LENGTH_SHORT).show();
             Log.v(TAG, "main fragment resume " + position);
         }
     }
@@ -163,6 +187,8 @@ public class MainFragment extends Fragment implements Constants{
     public void onPause() {
         super.onPause();
         if (Constants.DEBUG) {
+            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                    R.string.toast_pause, Snackbar.LENGTH_SHORT).show();
             Log.v(TAG, "main fragment pause");
         }
     }
@@ -170,8 +196,10 @@ public class MainFragment extends Fragment implements Constants{
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean("unitsTemperature", temperature);
+        outState.putParcelable("SETTING", currentMyParcel);
         if (Constants.DEBUG) {
+            Snackbar.make(getActivity().findViewById(android.R.id.content),
+                    R.string.toast_saveInstanceState, Snackbar.LENGTH_SHORT).show();
             Log.v(TAG, "main fragment saveInstanceState");
         }
     }
@@ -192,17 +220,19 @@ public class MainFragment extends Fragment implements Constants{
         }
     }
 
-    private void showSetting() {
+    private void showSetting(MyParcel currentMyParcel) {
         if (isExistSetting) {
-            SettingFragment settingFragment = new SettingFragment();
+            SettingFragment settingFragment = (SettingFragment) getFragmentManager().
+                    findFragmentById(R.id.setting_cotainer_main);
+            settingFragment = SettingFragment.create(currentMyParcel);
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.setting_cotainer_main, settingFragment);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commit();
-        } else {
-            Intent intent = new Intent();
-            intent.setClass(getActivity(), SettingFragment.class);
-            startActivity(intent);
+            if (Constants.DEBUG) {
+                Log.v(TAG, "setting fragment commit with "+ currentMyParcel.isTheme()+" "+
+                        currentMyParcel.isTemperature()+" "+currentMyParcel.isWindSpeed() );
+            }
         }
     }
 }

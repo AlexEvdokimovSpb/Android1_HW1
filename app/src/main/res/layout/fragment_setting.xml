@@ -2,9 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/setting_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/teal_200">
+    android:theme="@style/Theme.MyHomeworkTropics">
 
     <TextView
         android:id="@+id/textViewSetting"
@@ -16,11 +17,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Switch
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch_theme"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin60"
+        android:layout_marginEnd="@dimen/margin60"
         android:text="@string/theme"
         android:showText="true"
         android:textOff="@string/dark"
@@ -29,11 +31,12 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewSetting"
         />
 
-    <Switch
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch_temperature"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin60"
+        android:layout_marginEnd="@dimen/margin60"
         android:layout_marginTop="@dimen/margin12"
         android:text="@string/temperature"
         android:showText="true"
@@ -43,11 +46,12 @@
         app:layout_constraintTop_toBottomOf="@+id/switch_theme"
         />
 
-    <Switch
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch_wind_speed"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin60"
+        android:layout_marginEnd="@dimen/margin60"
         android:layout_marginTop="@dimen/margin12"
         android:text="@string/wind_speed"
         android:showText="true"
@@ -57,7 +61,7 @@
         app:layout_constraintTop_toBottomOf="@+id/switch_temperature"
         />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
