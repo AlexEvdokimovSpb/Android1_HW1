@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 
-public class SettingActivity extends AppCompatActivity implements Constants, PublisherGetter{
+public class SettingActivity extends AppCompatActivity implements PublisherGetter{
 
     private static final String TAG = "HW "+ SettingActivity.class.getSimpleName();
     private MyParcel currentMyParcel;

@@ -6,46 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editTextDatePlace"
-        android:layout_width="@dimen/width190"
-        android:layout_height="@dimen/height60"
-        android:inputType="date"
-        app:layout_constraintStart_toEndOf="@+id/editTextTimePlace"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="@dimen/dimens16">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextDatePlace2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/date" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editTextTimePlace"
-        android:layout_width="@dimen/width190"
-        android:layout_height="@dimen/height60"
-        android:inputType="time"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="@dimen/dimens16">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextTimePlace2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/time" />
-    </com.google.android.material.textfield.TextInputLayout>
-
     <TextView
         android:id="@+id/textViewPlace"
         android:layout_width="@dimen/width190"
         android:layout_height="@dimen/height60"
+        android:layout_marginStart="@dimen/margin5"
+        android:layout_marginTop="@dimen/height60"
         android:text="@string/saint_petersburg"
         android:textSize="@dimen/size_place"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDatePlace" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonToday"
@@ -142,7 +112,7 @@
         android:layout_height="wrap_content"
         android:text="@string/select_place"
         app:layout_constraintStart_toEndOf="@+id/textViewPlace"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDatePlace" />
+        app:layout_constraintTop_toTopOf="@+id/textViewPlace" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/setting"

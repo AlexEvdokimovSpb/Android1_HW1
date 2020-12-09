@@ -23,7 +23,7 @@
     <string name="select_place">Выберите место</string>
 
     <!-- for name setting -->
-    <string name="setting">настройки</string>
+    <string name="setting">Hастройки</string>
 
     <string name="feels">Ощущается как:</string>
 
@@ -60,6 +60,8 @@
     <string name="degrees">градусы</string>
     <string name="date">Дата</string>
     <string name="time">Время</string>
+    <string name="menu_home">Домой</string>
+    <string name="search">Поиск</string>
 
 
 </resources>

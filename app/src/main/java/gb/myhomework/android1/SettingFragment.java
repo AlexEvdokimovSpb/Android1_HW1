@@ -19,7 +19,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-public class SettingFragment extends Fragment implements Constants {
+public class SettingFragment extends Fragment{
 
     public static final String TAG = "HW " + SettingFragment.class.getSimpleName();
     private boolean theme = false;
@@ -42,13 +42,13 @@ public class SettingFragment extends Fragment implements Constants {
     public static SettingFragment create(MyParcel currentMyParcel) {
         SettingFragment f = new SettingFragment();
         Bundle args = new Bundle();
-        args.putParcelable(SETTING, currentMyParcel);
+        args.putParcelable(Constants.SETTING, currentMyParcel);
         f.setArguments(args);
         return f;
     }
 
     public MyParcel getParcel() {
-        currentMyParcel = (MyParcel) getArguments().getParcelable(SETTING);
+        currentMyParcel = (MyParcel) getArguments().getParcelable(Constants.SETTING);
         return currentMyParcel;
     }
 
