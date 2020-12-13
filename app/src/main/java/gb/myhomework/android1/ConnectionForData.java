@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import javax.net.ssl.HttpsURLConnection;
 import gb.myhomework.android1.model.WeatherRequest;
 
-public class ConnectionForData implements Constants {
+public class ConnectionForData {
 
     private static final String TAG = "HW WebBrowser" + ConnectionForData.class.getSimpleName();
 
@@ -103,7 +103,7 @@ public class ConnectionForData implements Constants {
 
         String endRequest = "&APPID=";
 
-        request = startRequest + place + langFormat + unitFormat + endRequest + API_KEY_TEST;
+        request = startRequest + place + langFormat + unitFormat + endRequest + Constants.API_KEY_TEST;
         if (Constants.DEBUG) {
             Log.v(TAG, "request= " + request);
         }

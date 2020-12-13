@@ -1,4 +1,4 @@
-package gb.myhomework.android1;
+package gb.myhomework.android1.place;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +9,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class PlaceActivity extends AppCompatActivity implements Constants {
+import gb.myhomework.android1.Constants;
+import gb.myhomework.android1.MainPresenter;
+import gb.myhomework.android1.R;
+
+public class PlaceActivity extends AppCompatActivity {
 
     public static final String TAG = "HW "+ PlaceActivity.class.getSimpleName();
     private final MainPresenter presenter = MainPresenter.getInstance();
@@ -18,16 +22,24 @@ public class PlaceActivity extends AppCompatActivity implements Constants {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place);
-
-        String[] data = getResources().getStringArray(R.array.descriptions);
-        initRecyclerView(data);
+        initDataSource();
 
         if (Constants.DEBUG) {
             Log.v(TAG, "place activity create ");
         }
     }
 
-    private PlaceAdapter initRecyclerView(String[] data){
+    private void initDataSource() {
+        CityDataSource sourceData = new CitySourceBuilder()
+                .setResources(getResources())
+                .build();
+        final PlaceAdapter adapter = initRecyclerView(sourceData);
+        if (Constants.DEBUG) {
+            Log.v(TAG, "initDataSource ");
+        }
+    }
+
+    private PlaceAdapter initRecyclerView(CityDataSource data){
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

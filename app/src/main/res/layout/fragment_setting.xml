@@ -11,7 +11,7 @@
         android:id="@+id/textViewSetting"
         android:layout_width="@dimen/height155"
         android:layout_height="@dimen/height30"
-        android:layout_marginTop="@dimen/margin5"
+        android:layout_marginTop="@dimen/margin60"
         android:text="@string/setting"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -69,6 +69,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

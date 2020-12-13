@@ -29,8 +29,9 @@ import java.util.Locale;
 
 import gb.myhomework.android1.model.Weather;
 import gb.myhomework.android1.model.WeatherRequest;
+import gb.myhomework.android1.place.PlaceActivity;
 
-public class MainFragment extends Fragment implements Constants, ConnectionForData.WeatherCallback,
+public class MainFragment extends Fragment implements ConnectionForData.WeatherCallback,
         Observer  {
 
     public static final String TAG = "HW "+ MainFragment.class.getSimpleName();
@@ -51,7 +52,7 @@ public class MainFragment extends Fragment implements Constants, ConnectionForDa
     boolean isExistSetting;
     private WeatherRequest weatherRequest;
     private ConnectionForData connectionForData = new ConnectionForData(this);
-    private ConnectionForIcon connectionForIcon = new ConnectionForIcon();
+    private ConnectionAndSetIcon connectionAndSetIcon = new ConnectionAndSetIcon();
     private Publisher publisher;
 
     @Override
@@ -89,19 +90,6 @@ public class MainFragment extends Fragment implements Constants, ConnectionForDa
         int position=presenter.getPlace();
 
         connectionForData.connection(data[position], languageRu, formatMetric);
-
-        Date  currentDate = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM", Locale.getDefault());
-        String dateText = dateFormat.format(currentDate);
-        DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        String timeText = timeFormat.format(currentDate);
-
-        TextInputEditText editTextDatePlace = (TextInputEditText)
-                view.findViewById(R.id.editTextDatePlace2);
-        TextInputEditText editTextTimePlace = (TextInputEditText)
-                view.findViewById(R.id.editTextTimePlace2);
-        editTextDatePlace.setText(dateText);
-        editTextTimePlace.setText(timeText);
 
         Button button_detail = (Button) view.findViewById(R.id.details);
         button_detail.setOnClickListener(new View.OnClickListener() {
@@ -148,7 +136,7 @@ public class MainFragment extends Fragment implements Constants, ConnectionForDa
                     place.setText(foPlace);
                     numberTemperature.setText(foNumberTemperature);
                     numberFeelsTemperature.setText(foNumberFeelsTemperature);
-                    connectionForIcon.fetchImage(weatherIconUrl, weatherIcon);
+                    connectionAndSetIcon.fetchImage(weatherIconUrl, weatherIcon);
 
                     if (Constants.DEBUG) {
                         Log.v(TAG, "TEST " + foNumberTemperature);
