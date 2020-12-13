@@ -1,38 +1,36 @@
 package gb.myhomework.android1;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
+import gb.myhomework.android1.dialog.EnterPlaceFragment;
+import gb.myhomework.android1.dialog.OnDialogListener;
 import gb.myhomework.android1.model.Weather;
 import gb.myhomework.android1.model.WeatherRequest;
 import gb.myhomework.android1.place.PlaceActivity;
 
 public class MainFragment extends Fragment implements ConnectionForData.WeatherCallback,
-        Observer  {
+        Observer, OnDialogListener {
 
     public static final String TAG = "HW "+ MainFragment.class.getSimpleName();
     private final MainPresenter presenter = MainPresenter.getInstance();
@@ -45,23 +43,61 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
     private TextInputEditText numberFeelsTemperature;
     private ImageView weatherIcon;
 
+    private boolean theme;
+    private boolean languageRu;
+    private boolean formatMetric;
     private MyParcel currentMyParcel;
-    private boolean theme = false;
-    private boolean languageRu = true;
-    private boolean formatMetric = true;
-    boolean isExistSetting;
+    private boolean isExistSetting;
     private WeatherRequest weatherRequest;
     private ConnectionForData connectionForData = new ConnectionForData(this);
     private ConnectionAndSetIcon connectionAndSetIcon = new ConnectionAndSetIcon();
     private Publisher publisher;
+    private OnFragmentListener onFragmentListener;
+    private String newPlace;
+    boolean isEnterPlace; // определяет способ ввода места (из списка PlaceActivity или ввода в EnterPlaceFragment)
+
+    // создал для взаимодействия с EnterPlaceFragment, но похоже этот путь фрагмент - фрагмент не работает
+    private OnDialogListener onDialogListener = new OnDialogListener() {
+        @Override
+        public void onGetString(String string) {
+            if (Constants.DEBUG) {
+                Log.v(TAG, "from onDialogListener "+ string);
+            }
+        }
+    };
+
+    public static MainFragment create(MyParcel currentMyParcel) {
+        MainFragment f = new MainFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(Constants.SETTING, currentMyParcel);
+        f.setArguments(args);
+        if (Constants.DEBUG) {
+            Log.v(TAG, "main fragment create");
+            Log.v(TAG, "with "+ currentMyParcel);
+        }
+        return f;
+    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        publisher = ((PublisherGetter) context).getPublisher();
+        if (context instanceof PublisherGetter) {
+            publisher = ((PublisherGetter) context).getPublisher();
+        }
+        if (context instanceof MyParcelGetter && ((MyParcelGetter) context).getMyParcel()!=null) {
+            currentMyParcel = ((MyParcelGetter) context).getMyParcel();
+            theme = currentMyParcel.isTheme();
+            formatMetric = currentMyParcel.isFormatMetric();
+            languageRu = currentMyParcel.isLanguageRu();
+        }
+        if (context instanceof OnFragmentListener) {
+            this.onFragmentListener = (OnFragmentListener) context;
+        }
         if (Constants.DEBUG) {
-            Log.v(TAG, " context " + context);
-            Log.v(TAG, " publisher " + publisher);
+            Log.v(TAG, "main fragment onAttach");
+            Log.v(TAG, "context " + context);
+            Log.v(TAG, "publisher " + publisher);
+            Log.v(TAG, "with "+currentMyParcel+" "+theme+" "+languageRu+" "+formatMetric);
         }
     }
 
@@ -70,6 +106,7 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
                              Bundle savedInstanceState) {
         if (Constants.DEBUG) {
             Log.v(TAG, "main fragment onCreateView");
+            Log.v(TAG, "with "+ currentMyParcel);
         }
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
@@ -86,10 +123,17 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
 
         setTemperatureSymbol(formatMetric);
 
-        String[] data = getResources().getStringArray(R.array.descriptions);
-        int position=presenter.getPlace();
-
-        connectionForData.connection(data[position], languageRu, formatMetric);
+        // Действие а зависимости от типа ввода места (из списка PlaceActivity или ввода в EnterPlaceFragment)
+        if (isEnterPlace){
+            place.setText(newPlace);
+            connectionForData.connection(newPlace, languageRu, formatMetric);
+        }
+        else {
+            String[] data = getResources().getStringArray(R.array.descriptions);
+            int position=presenter.getPlace();
+            place.setText(data[position]);
+            connectionForData.connection(data[position], languageRu, formatMetric);
+        }
 
         Button button_detail = (Button) view.findViewById(R.id.details);
         button_detail.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +144,6 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
                 Intent browser = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(browser);
                 if (Constants.DEBUG) {
-                    Snackbar.make(v, R.string.toast_button_detail, Snackbar.LENGTH_SHORT).show();
                     Log.v(TAG, "go for getails" + url);
                 }
             }
@@ -112,8 +155,8 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PlaceActivity.class );
                 startActivity(intent);
+                isEnterPlace = false;
             if (Constants.DEBUG) {
-                Snackbar.make(v, R.string.toast_button_place, Snackbar.LENGTH_LONG).show();
                 Log.v(TAG, "select place");
             }
             }
@@ -160,14 +203,11 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), SettingActivity.class);
-                    currentMyParcel = new MyParcel(theme, languageRu, formatMetric);
+                    currentMyParcel = new MyParcel(theme, formatMetric, languageRu);
                     intent.putExtra("SETTING", currentMyParcel);
-                    intent.putExtra("PUBLISHER", publisher);
-                    startActivity(intent);
+                    startActivityForResult(intent, Constants.REQUEST_CODE);
                     if (Constants.DEBUG) {
-                        Snackbar.make(v, R.string.toast_button_setting, Snackbar.LENGTH_LONG).show();
                         Log.v(TAG, "select setting");
-                        Log.v(TAG, "send publisher " + publisher);
                         Log.v(TAG, "send currentMyParcel " + currentMyParcel);
                         Log.v(TAG, "in setting activity send: "+ currentMyParcel.isTheme()+" "+
                                 currentMyParcel.isFormatMetric()+" "+currentMyParcel.isLanguageRu() );
@@ -178,10 +218,18 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
 
         super.onViewCreated(view, savedInstanceState);
         if (Constants.DEBUG) {
-            Snackbar.make(getActivity().findViewById(android.R.id.content), R.string.toast_create,
-                    Snackbar.LENGTH_SHORT).show();
-            Log.v(TAG, "main fragment onViewCreated");
+            Log.v(TAG, "main fragment onViewCreated2");
+            Log.v(TAG, "with "+currentMyParcel+" "+theme+" "+languageRu+" "+formatMetric);
         }
+
+        // новая кнопка для вызова EnterPlaceFragment
+        Button buttonError = (Button) view.findViewById(R.id.button_enter_place);
+        buttonError.setOnClickListener(clickButtonEnterPlace);
+
+        // новая кнопка для вызова диалога ошибок
+        Button buttonEnterPlace = (Button) view.findViewById(R.id.buttonAlertDialog);
+        buttonEnterPlace.setOnClickListener(clickAlertDialog);
+
     }
 
     @Override
@@ -195,13 +243,11 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
             languageRu = currentMyParcel.isFormatMetric();
             setTemperatureSymbol(formatMetric);
 
-            if (Constants.DEBUG) {
-                Snackbar.make(getActivity().findViewById(android.R.id.content),
-                        R.string.toast_restoreInstanceState, Snackbar.LENGTH_SHORT).show();
+            if (Constants.DEBUG) { ;
                 Log.v(TAG, "main fragment restoreInstanceState");
             }
         } else {
-            currentMyParcel = new MyParcel(theme, languageRu, formatMetric);
+            currentMyParcel = new MyParcel(theme, formatMetric, languageRu);
         }
 
         if (isExistSetting) {
@@ -209,9 +255,8 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
         }
 
         if (Constants.DEBUG) {
-            Snackbar.make(getActivity().findViewById(android.R.id.content), R.string.toast_restart,
-                    Snackbar.LENGTH_SHORT).show();
             Log.v(TAG, "main fragment onActivityCreated");
+            Log.v(TAG, "with "+currentMyParcel+" "+theme+" "+languageRu+" "+formatMetric);
         }
     }
 
@@ -219,21 +264,27 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
     public void onStart(){
         super.onStart();
         if (Constants.DEBUG) {
-            Snackbar.make(getActivity().findViewById(android.R.id.content),
-                    R.string.toast_start, Snackbar.LENGTH_SHORT).show();
             Log.v(TAG, "main fragment start");
+            Log.v(TAG, "with "+currentMyParcel+" "+theme+" "+languageRu+" "+formatMetric);
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        String[] data = getResources().getStringArray(R.array.descriptions);
-        int position=presenter.getPlace();
-        connectionForData.connection(data[position], languageRu, formatMetric);
-        place.setText(data[position]);
-        setTemperatureSymbol(formatMetric);
+        // Действие а зависимости от типа ввода места (из списка PlaceActivity или ввода в EnterPlaceFragment)
+        if (isEnterPlace){
+            place.setText(newPlace);
+            connectionForData.connection(newPlace, languageRu, formatMetric);
+        }
+        else {
+            String[] data = getResources().getStringArray(R.array.descriptions);
+            int position=presenter.getPlace();
+            place.setText(data[position]);
+            connectionForData.connection(data[position], languageRu, formatMetric);
+        }
 
+        setTemperatureSymbol(formatMetric);
         if (weatherRequest != null) {
             float temp = weatherRequest.getMain().getTemp();
             if (Constants.DEBUG) {
@@ -246,9 +297,8 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
         }
 
         if (Constants.DEBUG) {
-            Snackbar.make(getActivity().findViewById(android.R.id.content),
-                    R.string.toast_resume, Snackbar.LENGTH_SHORT).show();
-            Log.v(TAG, "main fragment resume " + position);
+            Log.v(TAG, "main fragment resume " + newPlace);
+            Log.v(TAG, "with "+currentMyParcel+" "+theme+" "+languageRu+" "+formatMetric);
         }
     }
 
@@ -256,9 +306,8 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
     public void onPause() {
         super.onPause();
         if (Constants.DEBUG) {
-            Snackbar.make(getActivity().findViewById(android.R.id.content),
-                    R.string.toast_pause, Snackbar.LENGTH_SHORT).show();
             Log.v(TAG, "main fragment pause");
+            Log.v(TAG, "with "+currentMyParcel+" "+theme+ " "+ formatMetric + " "+ languageRu);
         }
     }
 
@@ -267,9 +316,8 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
         super.onSaveInstanceState(outState);
         outState.putParcelable("SETTING", currentMyParcel);
         if (Constants.DEBUG) {
-            Snackbar.make(getActivity().findViewById(android.R.id.content),
-                    R.string.toast_saveInstanceState, Snackbar.LENGTH_SHORT).show();
             Log.v(TAG, "main fragment saveInstanceState");
+            Log.v(TAG, "with "+currentMyParcel+" "+theme+ " "+ formatMetric + " "+ languageRu);
         }
     }
 
@@ -308,27 +356,87 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
     @Override
     public void callBackReturn(WeatherRequest weatherRequest) {
         this.weatherRequest = weatherRequest;
+        if (Constants.DEBUG) {
+            Log.v(TAG, "callBackReturnl " +weatherRequest);
+        }
     }
 
     @Override
     public void updateMyParcel(MyParcel myParcel) {
         currentMyParcel = myParcel;
         theme = currentMyParcel.isTheme();
-        languageRu = currentMyParcel.isLanguageRu();
         formatMetric = currentMyParcel.isFormatMetric();
-
+        languageRu = currentMyParcel.isLanguageRu();
+        onFragmentListener.onGetParcel(currentMyParcel);
         if (Constants.DEBUG) {
             Log.v(TAG, "updateMyParcel " +theme+ " "+ formatMetric + " "+ languageRu);
         }
         onResume();
     }
 
-    private void setTemperatureSymbol(boolean formatMetric){
+    private void setTemperatureSymbol (boolean formatMetric){
         if(formatMetric){
             unitsTemperature.setText(R.string.celsius);
-        }
-        else {
+        } else {
             unitsTemperature.setText(R.string.fahrenheit);
         }
     }
+
+    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            currentMyParcel = ((MyParcel)data.getParcelableExtra("SETTING"));
+            theme = currentMyParcel.isTheme();
+            formatMetric = currentMyParcel.isFormatMetric();
+            languageRu = currentMyParcel.isLanguageRu();
+            setTemperatureSymbol(formatMetric);
+            if (Constants.DEBUG) {
+                Log.i(TAG, "start onActivityResult "+currentMyParcel+" "+theme+" "+languageRu+" "+formatMetric);
+            }
+        }
+    }
+
+    // запускаем EnterPlaceFragment
+    private final View.OnClickListener clickButtonEnterPlace = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            EnterPlaceFragment enterPlaceFragment = EnterPlaceFragment.newInstance();
+            enterPlaceFragment.setOnDialogListener(onDialogListener);
+            enterPlaceFragment.show(getActivity().getSupportFragmentManager(),  "enterPlaceFragment");
+            isEnterPlace = true;
+        }
+    };
+
+    // Получаем "введеное место" в EnterPlaceFragment через MainActivity
+    @Override
+    public void onGetString(String resultDialog) {
+        newPlace = resultDialog;
+        place.setText(newPlace);
+        connectionForData.connection(newPlace, languageRu, formatMetric);
+        if (Constants.DEBUG) {
+            Log.v(TAG, "from MainActivity "+ newPlace);
+        }
+    }
+
+    private View.OnClickListener clickAlertDialog= new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            final View contentView = getLayoutInflater().inflate(R.layout.alert_dialog, null);
+            builder.setTitle(R.string.attention)
+                    .setView(contentView)
+                    .setPositiveButton(R.string.accepted, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            EditText editText = contentView.findViewById(R.id.alert_dialog);
+                            Toast.makeText(getContext(), String.format("Введено: %s", editText
+                                    .getText().toString()), Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+    };
+
 }

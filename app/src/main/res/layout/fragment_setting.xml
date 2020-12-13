@@ -32,7 +32,7 @@
         />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/switch_temperature"
+        android:id="@+id/switch_format"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin60"
@@ -47,7 +47,7 @@
         />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/switch_wind_speed"
+        android:id="@+id/switch_language"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin60"
@@ -58,7 +58,7 @@
         android:textOff="@string/ms"
         android:textOn="@string/kn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch_temperature"
+        app:layout_constraintTop_toBottomOf="@+id/switch_format"
         />
 
     <com.google.android.material.button.MaterialButton

@@ -1,8 +1,6 @@
 package gb.myhomework.android1;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,17 +20,23 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 public class SettingFragment extends Fragment{
 
     public static final String TAG = "HW " + SettingFragment.class.getSimpleName();
-    private boolean theme = false;
-    private boolean formatMetric = false;
-    private boolean languageRu = false;
+    private boolean theme;
+    private boolean formatMetric;
+    private boolean languageRu;
     private MyParcel currentMyParcel;
     private boolean isExistSetting;
     private Publisher publisher;
+    private OnFragmentListener onFragmentListener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        publisher = ((PublisherGetter) context).getPublisher();
+        if (context instanceof OnFragmentListener) {
+            this.onFragmentListener = (OnFragmentListener) context;
+        }
+        if (context instanceof PublisherGetter) {
+            publisher = ((PublisherGetter) context).getPublisher();
+        }
         if (Constants.DEBUG) {
             Log.v(TAG, "porteret context " + context);
             Log.v(TAG, "publisher " + publisher);
@@ -65,21 +69,20 @@ public class SettingFragment extends Fragment{
         formatMetric = currentMyParcel.isFormatMetric();
         languageRu = currentMyParcel.isLanguageRu();
 
-        SwitchMaterial switchTemperature = (SwitchMaterial) view.findViewById(R.id.switch_temperature);
         SwitchMaterial switchTheme = (SwitchMaterial) view.findViewById(R.id.switch_theme);
-        SwitchMaterial switchWindSpeed = (SwitchMaterial) view.findViewById(R.id.switch_wind_speed);
-        switchTheme.setChecked(theme);
-        switchTemperature.setChecked(formatMetric);
-        switchWindSpeed.setChecked(languageRu);
+        SwitchMaterial switchFormat = (SwitchMaterial) view.findViewById(R.id.switch_format);
+        SwitchMaterial switchLanguage = (SwitchMaterial) view.findViewById(R.id.switch_language);
 
-        switchTemperature.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        switchTheme.setChecked(theme);
+        switchFormat.setChecked(formatMetric);
+        switchLanguage.setChecked(languageRu);
+
+        switchFormat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 formatMetric = isChecked;
                 currentMyParcel.setFormatMetric(formatMetric);
                 if (Constants.DEBUG) {
-                    Snackbar.make(getActivity().findViewById(android.R.id.content),
-                            R.string.metric_system, Snackbar.LENGTH_LONG).show();
                     Log.v(TAG, "switch Temperature " + isChecked);
                 }
             }
@@ -91,21 +94,17 @@ public class SettingFragment extends Fragment{
                 theme = isChecked;
                 currentMyParcel.setTheme(theme);
                 if (Constants.DEBUG) {
-                    Snackbar.make(getActivity().findViewById(android.R.id.content),
-                            R.string.theme, Snackbar.LENGTH_LONG).show();
                     Log.v(TAG, "switch Theme " + isChecked);
                 }
             }
         });
 
-        switchWindSpeed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        switchLanguage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 languageRu = isChecked;
                 currentMyParcel.setLanguageRu(languageRu);
                 if (Constants.DEBUG) {
-                    Snackbar.make(getActivity().findViewById(android.R.id.content),
-                            R.string.russian, Snackbar.LENGTH_LONG).show();
                     Log.v(TAG, "switch WindSpeed " + isChecked);
                 }
             }
@@ -115,22 +114,21 @@ public class SettingFragment extends Fragment{
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Constants.DEBUG) {
-                    Log.v(TAG, "notify GO " + publisher);
-                }
-                publisher.notify(currentMyParcel);
-                if (Constants.DEBUG) {
-                    Log.v(TAG, "notify OK " + publisher);
-                }
-
-                if (Constants.DEBUG) {
-                    Log.v(TAG, "confirm and send " +theme+ " "+ formatMetric + " "+ languageRu);
-                }
-
                 isExistSetting = getResources().getConfiguration().orientation
                         != Configuration.ORIENTATION_LANDSCAPE;
                 if(isExistSetting){
+                    onFragmentListener.onGetParcel(currentMyParcel);
+                    if (Constants.DEBUG) {
+                        Log.v(TAG, "onGetParcel OK " + currentMyParcel);
+                        Log.v(TAG, "confirm and send "+theme+" "+formatMetric+" "+languageRu);
+                    }
                     getActivity().finish();
+                } else {
+                    publisher.notify(currentMyParcel);
+                    if (Constants.DEBUG) {
+                        Log.v(TAG, "notify OK "+publisher);
+                        Log.v(TAG, "confirm and send "+theme+" "+formatMetric+" "+languageRu);
+                    }
                 }
             }
         });
@@ -145,13 +143,12 @@ public class SettingFragment extends Fragment{
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
             theme = savedInstanceState.getBoolean("theme");
-            formatMetric = savedInstanceState.getBoolean("unitsTemperature");
-            languageRu = savedInstanceState.getBoolean("windSpeed");
+            formatMetric = savedInstanceState.getBoolean("format");
+            languageRu = savedInstanceState.getBoolean("language");
 
             if (Constants.DEBUG) {
-                Snackbar.make(getActivity().findViewById(android.R.id.content),
-                        R.string.toast_restoreInstanceState, Snackbar.LENGTH_SHORT).show();
                 Log.v(TAG, "setting fragment restoreInstanceState");
+                Log.v(TAG, "with "+theme+" "+formatMetric+" "+languageRu);
             }
         }
     }
@@ -160,14 +157,11 @@ public class SettingFragment extends Fragment{
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("theme", theme);
-        outState.putBoolean("unitsTemperature", formatMetric);
-        outState.putBoolean("windSpeed", languageRu);
-        outState.putParcelable("SETTING", currentMyParcel);
-
+        outState.putBoolean("format", formatMetric);
+        outState.putBoolean("language", languageRu);
         if (Constants.DEBUG) {
-            Snackbar.make(getActivity().findViewById(android.R.id.content),
-                    R.string.toast_saveInstanceState, Snackbar.LENGTH_SHORT).show();
             Log.v(TAG, "setting fragment saveInstanceState");
+            Log.v(TAG, "with "+theme+" "+formatMetric+" "+languageRu);
         }
     }
-    }
+}
