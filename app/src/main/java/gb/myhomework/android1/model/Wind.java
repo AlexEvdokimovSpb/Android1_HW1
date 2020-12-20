@@ -1,7 +1,15 @@
 package gb.myhomework.android1.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+//"wind":{"speed":4,"deg":250}
 public class Wind {
+    @SerializedName("speed")
+    @Expose
     private float speed;
+    @SerializedName("deg")
+    @Expose
     private int deg;
 
     public float getSpeed() {

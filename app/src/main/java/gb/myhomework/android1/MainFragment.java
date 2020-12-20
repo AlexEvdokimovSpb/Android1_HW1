@@ -26,14 +26,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.android.material.textfield.TextInputEditText;
+
+import gb.myhomework.android1.connection.ConnectionAndSetIcon;
+import gb.myhomework.android1.connection.ConnectionForData;
 import gb.myhomework.android1.dialog.EnterPlaceFragment;
 import gb.myhomework.android1.dialog.OnDialogListener;
 import gb.myhomework.android1.model.WeatherRequest;
 import gb.myhomework.android1.place.PlaceActivity;
 
 public class MainFragment extends Fragment implements ConnectionForData.WeatherCallback,
-        Observer, OnDialogListener {
+            Observer, OnDialogListener {
 
     public static final String TAG = "HW "+ MainFragment.class.getSimpleName();
     private final MainPresenter presenter = MainPresenter.getInstance();
@@ -42,8 +44,8 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
     private TextView place;
     private TextView unitsTemperature;
     private TextView weatherDescription;
-    private TextInputEditText numberTemperature;
-    private TextInputEditText numberFeelsTemperature;
+    private TextView numberTemperature;
+    private TextView numberFeelsTemperature;
     private ImageView weatherIcon;
 
     private boolean theme;
@@ -125,9 +127,9 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
         place  = (TextView) view.findViewById(R.id.textViewPlace);
         unitsTemperature = (TextView) view.findViewById(R.id.textViewTemperature);
         weatherDescription = (TextView) view.findViewById(R.id.textViewCloudy);
-        numberTemperature = (TextInputEditText) view.findViewById(R.id.editTextNumberTemperature2);
-        numberFeelsTemperature = (TextInputEditText)
-                view.findViewById(R.id.editTextNumberFeelsTemperature2);
+        numberTemperature = (TextView) view.findViewById(R.id.editTextNumberTemperature);
+        numberFeelsTemperature = (TextView)
+                view.findViewById(R.id.editTextNumberFeelsTemperature);
         weatherIcon = (ImageView) view.findViewById(R.id.imageViewCloudy);
         setTemperatureSymbol(formatMetric);
         goMyIntentService(); // запрос начальных значений
@@ -406,12 +408,12 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
     private void goMyIntentService() {
         if (isEnterPlace) {
             place.setText(newPlace);
-            MyIntentService.startMyIntentService(getContext(), newPlace);
+            MyIntentService.startMyIntentService(getContext(), newPlace, formatMetric, languageRu);
         } else {
             String[] data = getResources().getStringArray(R.array.descriptions);
             int position = presenter.getPlace();
             place.setText(data[position]);
-            MyIntentService.startMyIntentService(getContext(), data[position]);
+            MyIntentService.startMyIntentService(getContext(), data[position], formatMetric, languageRu);
         }
     }
     // Получатель широковещательного сообщения

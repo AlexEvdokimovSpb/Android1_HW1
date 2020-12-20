@@ -1,12 +1,28 @@
 package gb.myhomework.android1.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+//"main":{"temp":3.38,"feels_like":-1.03,"temp_min":3,"temp_max":3.89,"pressure":1022,"humidity":93}
 public class Main {
-     private float temp;
-     private float feels_like;
-     private float temp_min;
-     private float temp_max;
-     private int pressure;
-     private int humidity;
+    @SerializedName("temp")
+    @Expose
+    private float temp;
+    @SerializedName("feels_like")
+    @Expose
+    private float feels_like;
+    @SerializedName("temp_min")
+    @Expose
+    private float temp_min;
+    @SerializedName("temp_max")
+    @Expose
+    private float temp_max;
+    @SerializedName("pressure")
+    @Expose
+    private int pressure;
+    @SerializedName("humidity")
+    @Expose
+    private int humidity;
 
     public float getTemp() {
         return temp;
