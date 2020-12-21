@@ -26,20 +26,12 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonTomorrow"
+        android:id="@+id/buttonAlertDialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/buttonTomorrow"
+        android:text="@string/alert_dialog"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/buttonToday" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonFiveDays"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/buttonFiveDays"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/buttonTomorrow" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editTextNumberTemperature"
@@ -102,8 +94,10 @@
         android:id="@+id/imageViewCloudy"
         android:layout_width="@dimen/width190"
         android:layout_height="@dimen/height155"
+        android:layout_marginTop="17dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewPlace"
+        app:layout_constraintStart_toEndOf="@+id/editTextNumberFeelsTemperature"
+        app:layout_constraintTop_toBottomOf="@+id/button_enter_place"
         app:srcCompat="@drawable/load" />
 
     <com.google.android.material.button.MaterialButton
@@ -120,7 +114,7 @@
         android:layout_height="wrap_content"
         android:text="@string/setting"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/buttonFiveDays" />
+        app:layout_constraintStart_toEndOf="@+id/buttonAlertDialog" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/details"
@@ -129,5 +123,14 @@
         android:text="@string/button_more_details"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextNumberFeelsTemperature" />
+
+    <Button
+        android:id="@+id/button_enter_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin5"
+        android:text="@string/enter_place"
+        app:layout_constraintStart_toEndOf="@+id/textViewPlace"
+        app:layout_constraintTop_toBottomOf="@+id/button_select_place" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

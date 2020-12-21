@@ -34,11 +34,12 @@ public class MyParcel implements Parcelable {
     public boolean isLanguageRu() {
         return languageRu;
     }
-    public void setFormatMetric(boolean formatMetric) {
-        this.formatMetric = formatMetric;
-    }
+
     public void setTheme(boolean theme) {
         this.theme = theme;
+    }
+    public void setFormatMetric(boolean formatMetric) {
+        this.formatMetric = formatMetric;
     }
     public void setLanguageRu(boolean languageRu) {
         this.languageRu = languageRu;

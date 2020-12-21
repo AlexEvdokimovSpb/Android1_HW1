@@ -81,9 +81,15 @@
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
     <string name="nav_header_desc" translatable="false">Navigation header</string>
     <string name="action_settings" translatable="false">Settings</string>
-    <string name="menu_home" >Home</string>
+    <string name="menu_home">Home</string>
 
     <string name="nav_header_title" translatable="false">AlexSPb</string>
     <string name="nav_header_subtitle" translatable="false">3416216@gmail.com</string>
     <string name="search">Search</string>
+
+    <string name="attention">Attention!</string>
+    <string name="accepted">accepted</string>
+    <string name="place">place</string>
+    <string name="enter_place">Enter place</string>
+    <string name="alert_dialog">Alert Dialog</string>
 </resources>
