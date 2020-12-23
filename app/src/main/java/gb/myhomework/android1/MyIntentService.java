@@ -10,8 +10,18 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 
 import gb.myhomework.android1.connection.ConnectionForData;
+import gb.myhomework.android1.database.App;
+import gb.myhomework.android1.database.ResponseTheWeather;
+import gb.myhomework.android1.database.WeatherDao;
+import gb.myhomework.android1.database.WeatherSource;
 import gb.myhomework.android1.model.Weather;
 import gb.myhomework.android1.model.WeatherRequest;
 
@@ -34,6 +44,9 @@ public class MyIntentService extends IntentService implements ConnectionForData.
     private boolean languageRu = true;
     private boolean formatMetric = true;
     private final static int ID = 0;
+    private WeatherSource weatherSource;
+
+
 
     public MyIntentService() {
         super("MyIntentService");
@@ -49,6 +62,7 @@ public class MyIntentService extends IntentService implements ConnectionForData.
 
     public static void startMyIntentService(Context context, String newPlace,
                                             boolean formatMetric, boolean languageRu) {
+
         Intent intent = new Intent(context, MyIntentService.class);
         intent.putExtra(EXTRA_SECONDS, newPlace);
         intent.putExtra(EXTRA_SECONDS_2, formatMetric);
@@ -144,6 +158,19 @@ public class MyIntentService extends IntentService implements ConnectionForData.
             infoWeather[3] = Float.toString(weatherRequest.getMain().getTemp());
             infoWeather[4] = Float.toString(weatherRequest.getMain()
                     .getFeels_like());
+
+            // вставляем данные из запроса в базу данных
+            WeatherDao weatherDao = App.getInstance().getWeatherDao();
+            weatherSource = new WeatherSource(weatherDao);
+            ResponseTheWeather responseTheWeather = new ResponseTheWeather();
+            responseTheWeather.place = weatherRequest.getName();
+            responseTheWeather.temperature = weatherRequest.getMain().getTemp();
+            responseTheWeather.feelsTemperature = weatherRequest.getMain()
+                    .getFeels_like();
+            // добавляем дату и время запроса
+            responseTheWeather.dateAndTime = String.valueOf(LocalDateTime.now());
+            weatherSource.addResponseTheWeather(responseTheWeather);
+
             if (Constants.DEBUG) {
                 Log.v(TAG, "resultConnectionForData " + infoWeather[3] + infoWeather[2]);
             }

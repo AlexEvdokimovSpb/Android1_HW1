@@ -9,6 +9,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -107,7 +108,11 @@ public class MainActivity extends AppCompatActivity implements PublisherGetter,
                 startActivity(intentPlace);
                 break;
             case R.id.nav_setting:
-                 //TO DO
+                //TO DO;
+                break;
+            case R.id.nav_history:
+                Intent intentHistory = new Intent(this, HistoryActivity.class );
+                startActivity(intentHistory);
                 break;
         }
 
@@ -139,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements PublisherGetter,
             formatMetric = currentMyParcel.isFormatMetric();
             languageRu = currentMyParcel.isLanguageRu();
             if (Constants.DEBUG) {
-                Log.i(TAG, "start onActivityResult "+currentMyParcel+" "
+                Log.v(TAG, "start onActivityResult "+currentMyParcel+" "
                         +theme+" "+languageRu+" "+formatMetric);
             }
         }

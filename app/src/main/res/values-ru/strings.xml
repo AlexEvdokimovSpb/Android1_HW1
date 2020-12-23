@@ -67,6 +67,7 @@
     <string name="place">место</string>
     <string name="enter_place">Введите место</string>
     <string name="alert_dialog">Предупреждения</string>
+    <string name="history">История</string>
 
 
 </resources>

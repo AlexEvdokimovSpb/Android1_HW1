@@ -92,5 +92,6 @@
     <string name="place">place</string>
     <string name="enter_place">Enter place</string>
     <string name="alert_dialog">Alert Dialog</string>
+    <string name="history">History</string>
 
 </resources>
