@@ -93,5 +93,7 @@
     <string name="enter_place">Enter place</string>
     <string name="alert_dialog">Alert Dialog</string>
     <string name="history">History</string>
+    <string name="make_network_on">Make your network ON</string>
+    <string name="low_battery">Low battery</string>
 
 </resources>

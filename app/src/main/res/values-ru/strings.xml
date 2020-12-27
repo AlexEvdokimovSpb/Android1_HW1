@@ -68,6 +68,8 @@
     <string name="enter_place">Введите место</string>
     <string name="alert_dialog">Предупреждения</string>
     <string name="history">История</string>
+    <string name="make_network_on">Включите подключение к сети</string>
+    <string name="low_battery">Низкий заряд</string>
 
 
 </resources>
