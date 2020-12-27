@@ -2,11 +2,16 @@ package gb.myhomework.android1;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,11 +26,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.material.textfield.TextInputEditText;
 import gb.myhomework.android1.dialog.EnterPlaceFragment;
 import gb.myhomework.android1.dialog.OnDialogListener;
-import gb.myhomework.android1.model.Weather;
 import gb.myhomework.android1.model.WeatherRequest;
 import gb.myhomework.android1.place.PlaceActivity;
 
@@ -55,6 +58,8 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
     private OnFragmentListener onFragmentListener;
     private String newPlace;
     boolean isEnterPlace; // определяет способ ввода места (из списка PlaceActivity или ввода в EnterPlaceFragment)
+
+    static final String BROADCAST_WEATHER = "gb.myhomework.android1.MyIntentService";
 
     // создал для взаимодействия с EnterPlaceFragment, но похоже этот путь фрагмент - фрагмент не работает
     private OnDialogListener onDialogListener = new OnDialogListener() {
@@ -104,6 +109,8 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // канал нотификации
+        initNotificationChannel();
         if (Constants.DEBUG) {
             Log.v(TAG, "main fragment onCreateView");
             Log.v(TAG, "with "+ currentMyParcel);
@@ -113,6 +120,8 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         place  = (TextView) view.findViewById(R.id.textViewPlace);
         unitsTemperature = (TextView) view.findViewById(R.id.textViewTemperature);
         weatherDescription = (TextView) view.findViewById(R.id.textViewCloudy);
@@ -120,20 +129,8 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
         numberFeelsTemperature = (TextInputEditText)
                 view.findViewById(R.id.editTextNumberFeelsTemperature2);
         weatherIcon = (ImageView) view.findViewById(R.id.imageViewCloudy);
-
         setTemperatureSymbol(formatMetric);
-
-        // Действие а зависимости от типа ввода места (из списка PlaceActivity или ввода в EnterPlaceFragment)
-        if (isEnterPlace){
-            place.setText(newPlace);
-            connectionForData.connection(newPlace, languageRu, formatMetric);
-        }
-        else {
-            String[] data = getResources().getStringArray(R.array.descriptions);
-            int position=presenter.getPlace();
-            place.setText(data[position]);
-            connectionForData.connection(data[position], languageRu, formatMetric);
-        }
+        goMyIntentService(); // запрос начальных значений
 
         Button button_detail = (Button) view.findViewById(R.id.details);
         button_detail.setOnClickListener(new View.OnClickListener() {
@@ -166,29 +163,7 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
         buttonToday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (weatherRequest != null) {
-                    Weather weather[] = weatherRequest.getWeather();
-                    String foWeatherDescription = weather[ID].getDescription();
-                    String weatherIconUrl = weather[ID].getIcon();
-                    String foPlace = weatherRequest.getName();
-                    String foNumberTemperature = Float.toString(weatherRequest.getMain().getTemp());
-                    String foNumberFeelsTemperature = Float.toString(weatherRequest.getMain()
-                            .getFeels_like());
-
-                    weatherDescription.setText(foWeatherDescription);
-                    place.setText(foPlace);
-                    numberTemperature.setText(foNumberTemperature);
-                    numberFeelsTemperature.setText(foNumberFeelsTemperature);
-                    connectionAndSetIcon.fetchImage(weatherIconUrl, weatherIcon);
-
-                    if (Constants.DEBUG) {
-                        Log.v(TAG, "TEST " + foNumberTemperature);
-                    }
-                } else {
-                    if (Constants.DEBUG) {
-                        Log.v(TAG, "weatherRequest = null");
-                    }
-                }
+                goMyIntentService(); // запрос начальных значений
                 if (Constants.DEBUG) {
                     Log.v(TAG, "buttonToday");
                 }
@@ -216,7 +191,6 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
             });
         }
 
-        super.onViewCreated(view, savedInstanceState);
         if (Constants.DEBUG) {
             Log.v(TAG, "main fragment onViewCreated2");
             Log.v(TAG, "with "+currentMyParcel+" "+theme+" "+languageRu+" "+formatMetric);
@@ -229,7 +203,6 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
         // новая кнопка для вызова диалога ошибок
         Button buttonEnterPlace = (Button) view.findViewById(R.id.buttonAlertDialog);
         buttonEnterPlace.setOnClickListener(clickAlertDialog);
-
     }
 
     @Override
@@ -242,17 +215,13 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
             currentMyParcel = (MyParcel) savedInstanceState.getParcelable("SETTING");
             languageRu = currentMyParcel.isFormatMetric();
             setTemperatureSymbol(formatMetric);
-
             if (Constants.DEBUG) { ;
                 Log.v(TAG, "main fragment restoreInstanceState");
             }
         } else {
             currentMyParcel = new MyParcel(theme, formatMetric, languageRu);
         }
-
-        if (isExistSetting) {
-            showSetting(currentMyParcel);
-        }
+        showSetting(currentMyParcel);
 
         if (Constants.DEBUG) {
             Log.v(TAG, "main fragment onActivityCreated");
@@ -263,6 +232,8 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
     @Override
     public void onStart(){
         super.onStart();
+        // подписываемся на сервис
+        getActivity().registerReceiver(resultConnectionForData, new IntentFilter(BROADCAST_WEATHER));
         if (Constants.DEBUG) {
             Log.v(TAG, "main fragment start");
             Log.v(TAG, "with "+currentMyParcel+" "+theme+" "+languageRu+" "+formatMetric);
@@ -272,18 +243,7 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
     @Override
     public void onResume() {
         super.onResume();
-        // Действие а зависимости от типа ввода места (из списка PlaceActivity или ввода в EnterPlaceFragment)
-        if (isEnterPlace){
-            place.setText(newPlace);
-            connectionForData.connection(newPlace, languageRu, formatMetric);
-        }
-        else {
-            String[] data = getResources().getStringArray(R.array.descriptions);
-            int position=presenter.getPlace();
-            place.setText(data[position]);
-            connectionForData.connection(data[position], languageRu, formatMetric);
-        }
-
+        goMyIntentService();
         setTemperatureSymbol(formatMetric);
         if (weatherRequest != null) {
             float temp = weatherRequest.getMain().getTemp();
@@ -324,6 +284,8 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
     @Override
     public void onStop() {
         super.onStop();
+        // отписываемся от сервиса
+        getActivity().unregisterReceiver(resultConnectionForData);
         if (Constants.DEBUG) {
             Log.v(TAG, "main fragment stop");
         }
@@ -357,7 +319,7 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
     public void callBackReturn(WeatherRequest weatherRequest) {
         this.weatherRequest = weatherRequest;
         if (Constants.DEBUG) {
-            Log.v(TAG, "callBackReturnl " +weatherRequest);
+            Log.v(TAG, "callBackReturn " +weatherRequest);
         }
     }
 
@@ -412,7 +374,8 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
     public void onGetString(String resultDialog) {
         newPlace = resultDialog;
         place.setText(newPlace);
-        connectionForData.connection(newPlace, languageRu, formatMetric);
+        //connectionForData.connection(newPlace, languageRu, formatMetric);
+        goMyIntentService();
         if (Constants.DEBUG) {
             Log.v(TAG, "from MainActivity "+ newPlace);
         }
@@ -439,4 +402,53 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
         }
     };
 
+    // Обращение к сервису
+    private void goMyIntentService() {
+        if (isEnterPlace) {
+            place.setText(newPlace);
+            MyIntentService.startMyIntentService(getContext(), newPlace);
+        } else {
+            String[] data = getResources().getStringArray(R.array.descriptions);
+            int position = presenter.getPlace();
+            place.setText(data[position]);
+            MyIntentService.startMyIntentService(getContext(), data[position]);
+        }
+    }
+    // Получатель широковещательного сообщения
+    private BroadcastReceiver resultConnectionForData = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String foWeatherDescription = intent.getStringExtra(MyIntentService
+                    .EXTRA_RESULT_DESCRIPTION);
+            final String weatherIconUrl = intent.getStringExtra(MyIntentService.EXTRA_RESULT_ICON);
+            final String foPlace = intent.getStringExtra(MyIntentService.EXTRA_RESULT_PLACE);
+            final String result = intent.getStringExtra(MyIntentService.EXTRA_RESULT_T);
+            final String foNumberFeelsTemperature = intent.getStringExtra(MyIntentService.EXTRA_RESULT_T_FEELS);
+            // Потокобезопасный вывод данных
+            numberTemperature.post(new Runnable() {
+                @Override
+                public void run() {
+                    weatherDescription.setText(foWeatherDescription);
+                    connectionAndSetIcon.fetchImage(weatherIconUrl, weatherIcon);
+                    place.setText(foPlace);
+                    numberTemperature.setText(result);
+                    numberFeelsTemperature.setText(foNumberFeelsTemperature);
+
+                    if (Constants.DEBUG) {
+                        Log.v(TAG, "from BroadcastReceiver "+ result);
+                    }
+                }
+            });
+        }
+    };
+    // Канал нотификации
+    private void initNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) getContext()
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            NotificationChannel mChannel = new NotificationChannel("2", "name", importance);
+            notificationManager.createNotificationChannel(mChannel);
+        }
+    }
 }
