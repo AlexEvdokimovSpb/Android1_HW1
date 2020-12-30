@@ -70,6 +70,10 @@
     <string name="history">История</string>
     <string name="make_network_on">Включите подключение к сети</string>
     <string name="low_battery">Низкий заряд</string>
+    <string name="map">Карта</string>
+    <string name="longitude">Долгота</string>
+    <string name="latitude">Широта</string>
+    <string name="title_activity_maps">Карты</string>
 
 
 </resources>
