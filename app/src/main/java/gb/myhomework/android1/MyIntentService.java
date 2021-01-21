@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat;
 
 import java.io.IOException;
 
+import gb.myhomework.android1.connection.ConnectionForData;
 import gb.myhomework.android1.model.Weather;
 import gb.myhomework.android1.model.WeatherRequest;
 
@@ -19,6 +20,8 @@ public class MyIntentService extends IntentService implements ConnectionForData.
     public static final String TAG = "HW "+ MyIntentService.class.getSimpleName();
 
     private static final String EXTRA_SECONDS = "gb.myhomework.android1.MyIntentService.SECONDS";
+    private static final String EXTRA_SECONDS_2 = "gb.myhomework.android1.MyIntentService.SECONDS_2";
+    private static final String EXTRA_SECONDS_3 = "gb.myhomework.android1.MyIntentService.SECONDS_3";
     static final String EXTRA_RESULT_DESCRIPTION = "RESULT_DESCRIPTION"; // описание погоды
     static final String EXTRA_RESULT_ICON = "RESULT_ICON"; // иконка погоды
     static final String EXTRA_RESULT_PLACE = "RESULT_PLACE"; // место
@@ -44,9 +47,12 @@ public class MyIntentService extends IntentService implements ConnectionForData.
         }
     }
 
-    public static void startMyIntentService(Context context, String newPlace) {
+    public static void startMyIntentService(Context context, String newPlace,
+                                            boolean formatMetric, boolean languageRu) {
         Intent intent = new Intent(context, MyIntentService.class);
         intent.putExtra(EXTRA_SECONDS, newPlace);
+        intent.putExtra(EXTRA_SECONDS_2, formatMetric);
+        intent.putExtra(EXTRA_SECONDS_3, languageRu);
         context.startService(intent);
         if (Constants.DEBUG) {
             Log.v(TAG, "startMyIntentService " + newPlace);
@@ -56,6 +62,8 @@ public class MyIntentService extends IntentService implements ConnectionForData.
     @Override
     protected void onHandleIntent(Intent intent) {
         String newPlace = intent.getStringExtra(EXTRA_SECONDS);
+        formatMetric = intent.getBooleanExtra(EXTRA_SECONDS_2, formatMetric);
+        languageRu = intent.getBooleanExtra(EXTRA_SECONDS_3, languageRu);
         if (Constants.DEBUG) {
             Log.v(TAG, "onHandleIntent newPlace=" + newPlace);
         }
@@ -77,7 +85,6 @@ public class MyIntentService extends IntentService implements ConnectionForData.
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        makeNote("onStartCommand");
         if (Constants.DEBUG) {
             Log.v(TAG, "onStartCommand ");
         }
@@ -86,7 +93,6 @@ public class MyIntentService extends IntentService implements ConnectionForData.
 
     @Override
     public boolean stopService(Intent name) {
-        makeNote("stopService");
         if (Constants.DEBUG) {
             Log.v(TAG, "stopService ");
         }
@@ -164,5 +170,10 @@ public class MyIntentService extends IntentService implements ConnectionForData.
         if (Constants.DEBUG) {
             Log.v(TAG, "sendBrodcast "+ infoWeather[3]);
         }
+    }
+
+    private void setParameter(boolean languageRu, boolean formatMetric){
+        this.languageRu = languageRu;
+        this.formatMetric = formatMetric;
     }
 }

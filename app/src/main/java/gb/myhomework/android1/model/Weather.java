@@ -1,10 +1,22 @@
 package gb.myhomework.android1.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+//"weather":[{"id":804,"main":"Clouds","description":"пасмурно","icon":"04d"}]
 public class Weather {
+    @SerializedName("id")
+    @Expose
     private int id;
+    @SerializedName("main")
+    @Expose
     private String main;
+    @SerializedName("description")
+    @Expose
     private String description;
-    private String icon;
+    @SerializedName("icon")
+    @Expose
+    private String icon;;
 
     public int getId() {
         return id;
