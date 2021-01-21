@@ -8,17 +8,30 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import gb.myhomework.android1.dialog.OnDialogListener;
 import gb.myhomework.android1.place.PlaceActivity;
+import gb.myhomework.android1.receivers.LowBatteryReceiver;
+import gb.myhomework.android1.receivers.NoNetworkReceiver;
 
 public class MainActivity extends AppCompatActivity implements PublisherGetter,
         NavigationView.OnNavigationItemSelectedListener, OnFragmentListener, OnDialogListener, MyParcelGetter {
@@ -30,6 +43,11 @@ public class MainActivity extends AppCompatActivity implements PublisherGetter,
     private Publisher publisher = new Publisher();
     private String newPlace;
     private MainFragment mainFragment;
+    private BroadcastReceiver noNetworkReceiver = new NoNetworkReceiver();
+    private BroadcastReceiver lowBatteryReceiver = new LowBatteryReceiver();
+    private String channelId = "2";
+    private String name = "name";
+    private String CONNECTIVITY_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +68,19 @@ public class MainActivity extends AppCompatActivity implements PublisherGetter,
             Log.v(TAG, "main activity create");
             Log.v(TAG, "with "+currentMyParcel+" "+theme+" "+languageRu+" "+formatMetric);
         }
+
+        // получение токена
+        initGetToken();
+
+        // открываем канал нотификации
+        // и регистриуем приемник сообщений о низком заряде
+        // и приемник изменения доступа к сети
+        initNotificationChannel();
+        final IntentFilter batteryFilter = new IntentFilter(Intent.ACTION_BATTERY_LOW);
+        registerReceiver(lowBatteryReceiver, batteryFilter);
+        final IntentFilter netFilters = new IntentFilter();
+        netFilters.addAction(CONNECTIVITY_CHANGE);
+        registerReceiver(noNetworkReceiver,  netFilters);
     }
 
     @Override
@@ -185,6 +216,50 @@ public class MainActivity extends AppCompatActivity implements PublisherGetter,
         mainFragment.onGetString(newPlace);
         if (Constants.DEBUG) {
             Log.v(TAG, "from EnterPlaceFragment "+ newPlace);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // отменяем регистрации при закрытии активити
+        unregisterReceiver(noNetworkReceiver);
+        unregisterReceiver(lowBatteryReceiver);
+        if (Constants.DEBUG) {
+            Log.v(TAG, "onDestroy ");
+        }
+    }
+
+    // инициализация канала нотификаций
+    private void initNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager)
+                    getSystemService(Context.NOTIFICATION_SERVICE);
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            NotificationChannel channel = new NotificationChannel(channelId, name, importance);
+            notificationManager.createNotificationChannel(channel);
+        }
+        if (Constants.DEBUG) {
+            Log.v(TAG, "initNotificationChannel ");
+        }
+    }
+
+    // второй способ получения токена
+    private void initGetToken() {
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                if (!task.isSuccessful()) {
+                    Log.w("PushMessage", "getInstanceId failed", task.getException());
+                    return;
+                }
+                String token = task.getResult().getToken();
+                Log.d(TAG, "token: "+ token);
+            }
+        });
+        if (Constants.DEBUG) {
+            Log.v(TAG, "initGetToken ");
         }
     }
 }
