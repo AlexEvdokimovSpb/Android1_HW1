@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
@@ -60,6 +61,12 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
     private OnFragmentListener onFragmentListener;
     private String newPlace;
     boolean isEnterPlace; // определяет способ ввода места (из списка PlaceActivity или ввода в EnterPlaceFragment)
+
+    public static final String APP_PREFERENCES_PLACE = "Place"; // место
+    public static final String APP_PREFERENCES_DESCRIPTION = "WeatherDescription"; // описание погоды
+    public static final String APP_PREFERENCES_TEMPERATURE = "NumberTemperature"; // температура
+    public static final String APP_PREFERENCES_FEELS= "NumberFeelsTemperature"; // ощущается как
+    private SharedPreferences sharedPref;
 
     static final String BROADCAST_WEATHER = "gb.myhomework.android1.MyIntentService";
 
@@ -123,7 +130,6 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         place  = (TextView) view.findViewById(R.id.textViewPlace);
         unitsTemperature = (TextView) view.findViewById(R.id.textViewTemperature);
         weatherDescription = (TextView) view.findViewById(R.id.textViewCloudy);
@@ -132,6 +138,11 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
                 view.findViewById(R.id.editTextNumberFeelsTemperature);
         weatherIcon = (ImageView) view.findViewById(R.id.imageViewCloudy);
         setTemperatureSymbol(formatMetric);
+
+        // искользуем SharedPreferences для загрузки значений
+        sharedPref = getContext().getSharedPreferences(Constants.APP_PREFERENCES, Context.MODE_PRIVATE);
+        loadPreferences(sharedPref);
+
         goMyIntentService(); // запрос начальных значений
 
         Button button_detail = (Button) view.findViewById(R.id.details);
@@ -288,6 +299,8 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
         super.onStop();
         // отписываемся от сервиса
         getActivity().unregisterReceiver(resultConnectionForData);
+        // сохраняем SharedPreferences
+        savePreferences(sharedPref);
         if (Constants.DEBUG) {
             Log.v(TAG, "main fragment stop");
         }
@@ -452,5 +465,29 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
             NotificationChannel mChannel = new NotificationChannel("2", "name", importance);
             notificationManager.createNotificationChannel(mChannel);
         }
+    }
+
+    // Сохраняем настройки в SharedPreferences
+    private void savePreferences(SharedPreferences sharedPref){
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(APP_PREFERENCES_PLACE, place.getText().toString());
+        editor.putString(APP_PREFERENCES_DESCRIPTION, weatherDescription.getText().toString());
+        editor.putString(APP_PREFERENCES_TEMPERATURE, numberTemperature.getText().toString());
+        editor.putString(APP_PREFERENCES_FEELS, numberFeelsTemperature.getText().toString());
+        editor.commit();
+        if (Constants.DEBUG) {
+            Log.v(TAG, "savePreferences "+ place.getText().toString());
+        }
+    }
+    // загружаем настройки из SharedPreferences
+    private void loadPreferences(SharedPreferences sharedPref){
+        place.setText(sharedPref.getString(APP_PREFERENCES_PLACE, "Place"));
+        weatherDescription.setText(sharedPref.getString(APP_PREFERENCES_DESCRIPTION, "WeatherDescription"));
+        numberTemperature.setText(sharedPref.getString(APP_PREFERENCES_TEMPERATURE, "NumberTemperature"));
+        numberFeelsTemperature.setText(sharedPref.getString(APP_PREFERENCES_FEELS, "NumberFeelsTemperature"));
+        if (Constants.DEBUG) {
+            Log.v(TAG, "loadPreferences "+ place.getText().toString());
+        }
+
     }
 }
