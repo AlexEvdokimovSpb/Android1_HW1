@@ -138,12 +138,16 @@ public class MainActivity extends AppCompatActivity implements PublisherGetter,
                 Intent intentPlace = new Intent(this, PlaceActivity.class );
                 startActivity(intentPlace);
                 break;
-            case R.id.nav_setting:
-                //TO DO;
+            case R.id.nav_map:
+                Intent intentMap = new Intent(this, MapsActivity.class );
+                startActivityForResult(intentMap, Constants.MAP_PLACE);
                 break;
             case R.id.nav_history:
                 Intent intentHistory = new Intent(this, HistoryActivity.class );
                 startActivity(intentHistory);
+                break;
+            case R.id.nav_setting:
+                // TO DO
                 break;
         }
 
@@ -164,19 +168,33 @@ public class MainActivity extends AppCompatActivity implements PublisherGetter,
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode != Constants.REQUEST_CODE) {
-            super.onActivityResult(requestCode, resultCode, data);
-            return;
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                assert data != null;
+                currentMyParcel = ((MyParcel) data.getParcelableExtra("SETTING"));
+                theme = currentMyParcel.isTheme();
+                formatMetric = currentMyParcel.isFormatMetric();
+                languageRu = currentMyParcel.isLanguageRu();
+                if (Constants.DEBUG) {
+                    Log.v(TAG, "start onActivityResult " + currentMyParcel + " "
+                            + theme + " " + languageRu + " " + formatMetric);
+                }
+            }
         }
-        if (resultCode == RESULT_OK){
-            assert data != null;
-            currentMyParcel = ((MyParcel)data.getParcelableExtra("SETTING"));
-            theme = currentMyParcel.isTheme();
-            formatMetric = currentMyParcel.isFormatMetric();
-            languageRu = currentMyParcel.isLanguageRu();
-            if (Constants.DEBUG) {
-                Log.v(TAG, "start onActivityResult "+currentMyParcel+" "
-                        +theme+" "+languageRu+" "+formatMetric);
+        if (requestCode == Constants.MAP_PLACE) {
+            if (resultCode == RESULT_OK) {
+                if (data == null) {
+                    if (Constants.DEBUG) {
+                        Log.v(TAG, "map onActivityResult NULL");
+                    }
+                    return;
+                }
+                newPlace = data.getStringExtra("place");
+                mainFragment.onGetString(newPlace);
+                if (Constants.DEBUG) {
+                    Log.v(TAG, "map onActivityResult " + newPlace);
+                }
             }
         }
     }

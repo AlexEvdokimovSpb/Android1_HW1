@@ -8,4 +8,5 @@ public  class Constants {
     public static boolean VERBOSE = false;
     public static boolean DEBUG= VERBOSE&&true;
     public static final String APP_PREFERENCES = "mysettings";
+    public static int MAP_PLACE = 47;
 }

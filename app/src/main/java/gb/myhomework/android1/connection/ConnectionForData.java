@@ -19,6 +19,8 @@ public class ConnectionForData {
     private String langFormat;
     private String unitFormat;
     private OpenWeather openWeather;
+    private float lat; // широта
+    private float lon; // долгота
 
     WeatherCallback callback;
     public interface WeatherCallback{

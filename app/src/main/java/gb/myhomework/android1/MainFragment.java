@@ -389,6 +389,7 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
     public void onGetString(String resultDialog) {
         newPlace = resultDialog;
         place.setText(newPlace);
+        isEnterPlace = true;
         //connectionForData.connection(newPlace, languageRu, formatMetric);
         goMyIntentService();
         if (Constants.DEBUG) {

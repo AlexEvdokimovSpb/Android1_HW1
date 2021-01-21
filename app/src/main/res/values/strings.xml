@@ -96,4 +96,9 @@
     <string name="make_network_on">Make your network ON</string>
     <string name="low_battery">Low battery</string>
 
+    <string name="map">Map</string>
+    <string name="title_activity_maps">Maps</string>
+    <string name="latitude">Lat</string>
+    <string name="longitude">Long</string>
+
 </resources>
