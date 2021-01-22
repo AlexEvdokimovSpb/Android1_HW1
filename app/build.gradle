@@ -34,10 +34,22 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+//    flavorDimensions 'version'
+//    productFlavors {
+//        free {
+//            dimension 'version'
+//            versionNameSuffix '.free'
+//            applicationIdSuffix '.free'
+//        }
+//        pro {
+//            dimension 'version'
+//            versionNameSuffix '.pro'
+//            applicationIdSuffix '.pro'
+//        }
+//    }
 }
 
 dependencies {
-
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
@@ -57,5 +69,6 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:1.1.1"
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
 }
 apply plugin: 'com.google.gms.google-services'

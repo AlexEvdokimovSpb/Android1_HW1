@@ -130,7 +130,7 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        place  = (TextView) view.findViewById(R.id.textViewPlace);
+        place = (TextView) view.findViewById(R.id.textViewPlace);
         unitsTemperature = (TextView) view.findViewById(R.id.textViewTemperature);
         weatherDescription = (TextView) view.findViewById(R.id.textViewCloudy);
         numberTemperature = (TextView) view.findViewById(R.id.editTextNumberTemperature);
@@ -163,12 +163,12 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
         button_select_place.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), PlaceActivity.class );
+                Intent intent = new Intent(getActivity(), PlaceActivity.class);
                 startActivity(intent);
                 isEnterPlace = false;
-            if (Constants.DEBUG) {
-                Log.v(TAG, "select place");
-            }
+                if (Constants.DEBUG) {
+                    Log.v(TAG, "select place");
+                }
             }
         });
 
@@ -185,7 +185,7 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
 
         isExistSetting = getResources().getConfiguration().orientation
                 != Configuration.ORIENTATION_LANDSCAPE;
-        if(isExistSetting) {
+        if (isExistSetting) {
             Button button_setting = (Button) view.findViewById(R.id.setting);
             button_setting.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -197,8 +197,8 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
                     if (Constants.DEBUG) {
                         Log.v(TAG, "select setting");
                         Log.v(TAG, "send currentMyParcel " + currentMyParcel);
-                        Log.v(TAG, "in setting activity send: "+ currentMyParcel.isTheme()+" "+
-                                currentMyParcel.isFormatMetric()+" "+currentMyParcel.isLanguageRu() );
+                        Log.v(TAG, "in setting activity send: " + currentMyParcel.isTheme() + " " +
+                                currentMyParcel.isFormatMetric() + " " + currentMyParcel.isLanguageRu());
                     }
                 }
             });
@@ -206,7 +206,7 @@ public class MainFragment extends Fragment implements ConnectionForData.WeatherC
 
         if (Constants.DEBUG) {
             Log.v(TAG, "main fragment onViewCreated2");
-            Log.v(TAG, "with "+currentMyParcel+" "+theme+" "+languageRu+" "+formatMetric);
+            Log.v(TAG, "with " + currentMyParcel + " " + theme + " " + languageRu + " " + formatMetric);
         }
 
         // новая кнопка для вызова EnterPlaceFragment

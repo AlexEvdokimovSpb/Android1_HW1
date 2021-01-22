@@ -74,6 +74,7 @@
     <string name="longitude">Долгота</string>
     <string name="latitude">Широта</string>
     <string name="title_activity_maps">Карты</string>
+    <string name="sign_out">Выход</string>
 
 
 </resources>
