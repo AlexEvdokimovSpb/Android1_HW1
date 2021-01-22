@@ -20,10 +20,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
@@ -49,10 +57,47 @@ public class MainActivity extends AppCompatActivity implements PublisherGetter,
     private String name = "name";
     private String CONNECTIVITY_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
 
+    // Используется, чтобы определить результат Activity регистрации через
+    // Google
+    private static final int RC_SIGN_IN = 40404;
+   // private static final String TAG2 = "GoogleAuth";
+    // Клиент для регистрации пользователя через Google
+    private GoogleSignInClient googleSignInClient;
+    // Кнопка регистрации через Google
+    private com.google.android.gms.common.SignInButton buttonSignIn;
+    // Кнопка выхода из Google
+    private MaterialButton buttonSingOut;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Конфигурация запроса на регистрацию пользователя, чтобы получить
+        // идентификатор пользователя, его почту и основной профайл
+        // (регулируется параметром)
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        // Получаем клиента для регистрации и данные по клиенту
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
+        // Кнопка регистрации пользователя
+        buttonSignIn = findViewById(R.id.sign_in_button);
+        buttonSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signIn();
+            }
+        }
+        );
+        // Кнопка выхода
+        buttonSingOut = findViewById(R.id.sing_out_button);
+        buttonSingOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signOut();
+            }
+        });
 
         Toolbar toolbar = initToolbar();
         initDrawer(toolbar);
@@ -81,6 +126,20 @@ public class MainActivity extends AppCompatActivity implements PublisherGetter,
         final IntentFilter netFilters = new IntentFilter();
         netFilters.addAction(CONNECTIVITY_CHANGE);
         registerReceiver(noNetworkReceiver,  netFilters);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        enableSign();
+        // Проверим, входил ли пользователь в это приложение через Google
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            // Пользователь уже входил, сделаем кнопку недоступной
+            disableSign();
+            // Обновим почтовый адрес этого пользователя и выведем его на экран
+            updateUI(account.getEmail());
+        }
     }
 
     @Override
@@ -169,6 +228,14 @@ public class MainActivity extends AppCompatActivity implements PublisherGetter,
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            // Когда сюда возвращается Task, результаты аутентификации уже
+            // готовы
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+
         if (requestCode == Constants.REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 assert data != null;
@@ -279,5 +346,55 @@ public class MainActivity extends AppCompatActivity implements PublisherGetter,
         if (Constants.DEBUG) {
             Log.v(TAG, "initGetToken ");
         }
+    }
+
+    // Инициируем регистрацию пользователя
+    private void signIn() {
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+    // Выход из учётной записи в приложении
+    private void signOut() {
+        googleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        updateUI("email");
+                        enableSign();
+                    }
+        });
+    }
+
+    //https://developers.google.com/identity/sign-in/android/backend-auth?authuser=1
+    // Получаем данные пользователя
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
+            // Регистрация прошла успешно
+            disableSign();
+            updateUI(account.getEmail());
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure
+            // reason. Please refer to the GoogleSignInStatusCodes class
+            // reference for more information.
+            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+        }
+    }
+
+    // Обновляем данные о пользователе на экране
+    private void updateUI(String idToken) {
+        TextView token = findViewById(R.id.token);
+        token.setText(idToken);
+    }
+
+    private void enableSign(){
+        buttonSignIn.setEnabled(true);
+        buttonSingOut.setEnabled(false);
+    }
+
+    private void disableSign(){
+        buttonSignIn.setEnabled(false);
+        buttonSingOut.setEnabled(true);
     }
 }

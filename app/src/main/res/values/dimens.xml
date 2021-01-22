@@ -41,4 +41,5 @@
     <dimen name="margin4">4dp</dimen>
     <dimen name="margin2">2dp</dimen>
     <dimen name="text30">30sp</dimen>
+    <dimen name="margin_520">520dp</dimen>
 </resources>

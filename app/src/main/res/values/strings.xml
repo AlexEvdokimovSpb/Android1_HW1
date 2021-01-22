@@ -100,5 +100,6 @@
     <string name="title_activity_maps">Maps</string>
     <string name="latitude">Lat</string>
     <string name="longitude">Long</string>
+    <string name="sign_out">Sign out</string>
 
 </resources>
